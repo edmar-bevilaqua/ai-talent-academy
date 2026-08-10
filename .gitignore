@@ -219,3 +219,6 @@ __marimo__/
 
 assets/
 *.pptx
+
+!assets/whitecube/
+!docs/Apresentação_Template_WhiteCube.pptx
