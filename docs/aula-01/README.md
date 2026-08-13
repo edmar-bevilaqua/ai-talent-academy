@@ -10,7 +10,7 @@ Condução: Edmar Bevilaqua + Felipe André Bach Alves
 
 | Arquivo | O que é | Para quem |
 |---|---|---|
-| **`AI-Talent-Academy-Aula01.pptx`** | O deck: 63 slides, com roteiro de fala nas notas de cada slide | Vocês dois |
+| **`AI-Talent-Academy-Aula01.pptx`** | O deck: 64 slides, com roteiro de fala nas notas de cada slide | Vocês dois |
 | [`01-plano-da-aula.md`](01-plano-da-aula.md) | Cronômetro, marcos de controle, mapa essencial × descartável, checklists e riscos | Vocês dois |
 | [`02-roteiro-do-apresentador.md`](02-roteiro-do-apresentador.md) | Todas as notas do deck em markdown imprimível | Vocês dois |
 | [`03-material-de-apoio-participante.md`](03-material-de-apoio-participante.md) | Resumo + glossário + tarefas até quinta | Participantes (pós-aula) |
@@ -26,10 +26,10 @@ Condução: Edmar Bevilaqua + Felipe André Bach Alves
 | 19h00 às 19h10 | Recepção | Edmar + moderador | 1 e 2 |
 | 19h10 às 19h30 | Quem é a White Cube? | Ale e Márcio | 3 |
 | 19h30 às 19h45 | Cronograma e metodologia | Edmar | 4 a 11 |
-| 19h45 às 20h30 | Introdução ao universo de Dados e IA | Edmar | 12 a 37 |
-| 20h30 às 20h45 | Intervalo | (os dois) | 38 |
-| 20h45 às 21h45 | Ciclo de vida de soluções de dados e IA | Felipe | 39 a 57 |
-| 21h45 às 22h00 | Encerramento e Q&A | Felipe + Edmar | 58 a 63 |
+| 19h45 às 20h30 | Introdução ao universo de Dados e IA | Edmar | 12 a 38 |
+| 20h30 às 20h45 | Intervalo | (os dois) | 39 |
+| 20h45 às 21h45 | Ciclo de vida de soluções de dados e IA | Felipe | 40 a 58 |
+| 21h45 às 22h00 | Encerramento e Q&A | Felipe + Edmar | 59 a 64 |
 
 ---
 
@@ -41,7 +41,8 @@ extraídos de `Apresentação_Template_WhiteCube.pptx`, guardados em [`assets/wh
 | Elemento | Valor |
 |---|---|
 | Formato | 20 × 11,25 pol (16:9, mesma medida do template) |
-| Fonte | **Roboto** em 100% dos textos |
+| Fonte | **Roboto** em 100% dos textos, sem exceção |
+| Tamanho mínimo | 17pt em todo texto de leitura (rodapé e rótulos do diagrama de círculos são a única exceção) |
 | Azul institucional | `#28347B` |
 | Azul do logo | `#3C5DAA` |
 | Vermelho do logo | `#E23635` |
@@ -56,12 +57,17 @@ branco com régua azul (`image5`) e azul institucional para seções e declaraç
 ### Regras de estilo aplicadas
 
 1. **Roboto em tudo.**
-2. **Um único tamanho de fonte por caixa de texto.** Título e corpo de um card ficam em
+2. **Tamanho mínimo de 17pt em todo texto de leitura.** Exceções documentadas: rodapé
+   (13pt, é mobília da página) e os rótulos internos do diagrama de círculos concêntricos
+   (o espaço físico dos anéis não comporta 17pt).
+3. **Um único tamanho de fonte por caixa de texto.** Título e corpo de um card ficam em
    caixas separadas justamente para nunca misturar tamanhos num mesmo bloco.
-3. **Zero travessões.** Nem em dash nem en dash, nos slides e nas notas.
+4. **Zero travessões.** Nem em dash nem en dash, nos slides e nas notas.
+5. **Zero vícios de escrita que soam a IA.** Nada de "insight", "crucial", "fundamental",
+   contraste raso "não é X. É Y.", pergunta retórica em série. Lista completa em `CLAUDE.md`.
 
-As três regras são verificadas por asserção no gerador: se alguma for violada, o script
-falha e não gera o arquivo.
+As quatro primeiras regras são verificadas por asserção no gerador: se alguma for violada,
+o script falha e não gera o arquivo. A quinta depende de revisão manual do texto.
 
 ---
 
@@ -118,10 +124,11 @@ Rode os dois em sequência sempre que mexer no conteúdo, senão o roteiro fica 
 
 **Conferir:**
 - [ ] Se for citar algum número de mercado, confirme a fonte atualizada. Os casos usados no
-      deck (Netflix Prize 2009, Mata v. Avianca 2023, recrutamento da Amazon 2018) são
-      fatos públicos e estáveis. Qualquer estatística de “% de projetos de IA que falham”
+      deck (Netflix Prize 2009, Justiça Federal de Londrina 2025, reconhecimento facial em
+      Aracaju 2024 com o estudo DPU/CESeC 2025, recrutamento da Amazon 2018) são fatos
+      públicos e estáveis. Qualquer estatística de “% de projetos de IA que falham”
       precisa de fonte conferida ou deve ficar qualitativa.
 
 **Restrição de conteúdo, combinar com o moderador:**
 - [ ] 🚫 **Não mencionar o número de vagas de trainee em nenhum momento.** Resposta pronta
-      para o Q&A está nas notas do slide 62.
+      para o Q&A está nas notas do slide 63.

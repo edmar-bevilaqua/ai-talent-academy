@@ -56,18 +56,32 @@ BOTTOM = Inches(9.55)                    # limite inferior do conteudo
 LOGO = (Inches(16.328), Inches(0.586), Inches(3.066), Inches(0.795))
 
 # tamanhos (um por papel; nunca combinados numa mesma caixa)
+# Piso de legibilidade: 17pt para todo texto de leitura (corpo, bullet, card, tabela,
+# legenda). Abaixo disso o texto nao se le numa sala compartilhada por 190 pessoas.
+# As DUAS excecoes documentadas, that a propria versao final aprovada do usuario mantem
+# abaixo de 17pt, sao S_FOOT (rodape, e mobilia da pagina, ninguem precisa le-lo de
+# longe) e os rotulos internos dos circulos concentricos do sl_nested (fs_rings: o
+# espaco fisico dentro dos aneis mais internos nao comporta 17pt sem quebrar o desenho).
+S_MIN = 17
 S_KICKER = 20
 S_TITLE = 40
 S_SUB = 17
 S_BULLET = 21
 S_CARD_T = 20
-S_CARD_B = 15.5
-S_TABLE_H = 16
-S_TABLE_C = 15
+S_CARD_B = 17
+S_TABLE_H = 18
+S_TABLE_C = 17
 S_BIG = 36
 S_SRC = 18
 MAX_LINHA_BIG = 62   # caracteres por linha em S_BIG antes de quebrar sozinho
-S_FOOT = 13
+S_FOOT = 13          # excecao documentada: rodape, nao e texto de leitura
+S_TIMELINE = 17
+S_PIPELINE_B = 17
+S_NESTED_LEGEND = 17
+
+assert min(S_SUB, S_BULLET, S_CARD_T, S_CARD_B, S_TABLE_H, S_TABLE_C, S_BIG, S_SRC,
+           S_TIMELINE, S_PIPELINE_B, S_NESTED_LEGEND) >= S_MIN, \
+    f"Tamanho de fonte de leitura abaixo do minimo de {S_MIN}pt"
 
 ACCENTS = [NAVY, NAVY_SOFT, RED, NAVY, NAVY_SOFT, RED]
 
@@ -219,7 +233,7 @@ def sl_cover():
     shape(s, ML, Inches(5.75), Inches(2.4), Pt(5), fill=RED)
     block(s, ML, Inches(8.15), Inches(13), Inches(1.0),
           ["Aula 1  ·  Segunda-feira, 19h00 às 22h00  ·  Online",
-           "White Cube  ·  Bevilaqua Data Labs  ·  BPTECH"], 16, INK, space=5)
+           "White Cube  ·  Bevilaqua Data Labs  ·  BPTECH"], S_MIN, INK, space=5)
     footer(s)
     return s
 
@@ -336,7 +350,7 @@ def sl_timeline(kicker, title, steps, subtitle=None):
         shape(s, x + int(cw / 2) - int(d / 2), line_y - Inches(0.14), d, d, fill=acc,
               kind=MSO_SHAPE.OVAL)
         block(s, x, line_y + Inches(0.55), cw, BOTTOM - line_y - Inches(0.7),
-              texto.split("\n"), 16, INK, align=PP_ALIGN.CENTER, space=2, line=1.22)
+              texto.split("\n"), S_TIMELINE, INK, align=PP_ALIGN.CENTER, space=2, line=1.22)
     footer(s)
     return s
 
@@ -362,9 +376,16 @@ def sl_pipeline(kicker, title, steps, subtitle=None, per_row=4):
         block(s, x + Inches(1.02), yy + Inches(0.36), cw - Inches(1.3), Inches(0.7), t,
               18, NAVY, bold=True, space=0, line=1.05)
         block(s, x + Inches(0.32), yy + Inches(1.3), cw - Inches(0.62), ch - Inches(1.5),
-              d, 14, INK, space=0, line=1.22)
+              d, S_PIPELINE_B, INK, space=0, line=1.22)
         if c < per_row - 1 and i < len(steps) - 1:
             shape(s, x + cw + Inches(0.1), yy + int(ch / 2) - Inches(0.17), Inches(0.42),
+                  Inches(0.34), fill=LINE, kind=MSO_SHAPE.CHEVRON)
+        elif c == per_row - 1 and i < len(steps) - 1:
+            # conector de virada de linha: sem isso o olho para no fim da linha e nao
+            # continua a leitura na proxima. Vive na margem verdadeira, a esquerda de ML,
+            # alinhado ao centro vertical da linha SEGUINTE (nao da linha atual).
+            next_center = yy + ch + vgap + int(ch / 2)
+            shape(s, ML - Inches(0.52), next_center - Inches(0.17), Inches(0.42),
                   Inches(0.34), fill=LINE, kind=MSO_SHAPE.CHEVRON)
     footer(s)
     return s
@@ -409,7 +430,7 @@ def sl_nested(kicker, title, subtitle=None):
         block(s, rx + Inches(0.3), yy, lw - Inches(0.3), Inches(0.42), t, 19, NAVY,
               bold=True, space=0)
         block(s, rx + Inches(0.3), yy + Inches(0.45), lw - Inches(0.3), Inches(0.6), d,
-              15, INK, space=0, line=1.16)
+              S_NESTED_LEGEND, INK, space=0, line=1.16)
         yy += step
     footer(s)
     return s
@@ -722,8 +743,8 @@ Este bloco resolve a maior ansiedade da sala. Vá com calma.
 Primeira coisa: não existe uma prova final. A avaliação é contínua. A gente vai
 acompanhando o que vocês entregam ao longo das semanas.
 
-Segunda coisa, e essa é a mais importante: o que a gente avalia não é se você acertou
-a resposta. É COMO você pensa. Como você estrutura o problema, como você aprende com
+Segunda coisa, e essa é a mais importante: o que a gente avalia é COMO você pensa,
+não se você acertou a resposta. Como você estrutura o problema, como você aprende com
 o feedback, como você prioriza quando o tempo é curto e como você comunica o que fez.
 
 Na semana 4 tem o Mini-Desafio, que é a primeira entrega avaliada. E aí vem uma coisa
@@ -768,13 +789,14 @@ s = sl_section("02", "Introdução ao universo de\nDados e Inteligência Artific
 notes(s, "19h45 às 20h30 (45 min)", "ESSENCIAL", EU,
       """
 Bloco central da sua parte. Estrutura em 4 movimentos:
-  1) Por que agora (contexto e hype)          ~10 min
-  2) O mapa das siglas e como isso funciona   ~15 min
-  3) O que a IA NÃO faz                       ~8 min
-  4) Carreiras e papéis                       ~12 min
+  1) Por que agora (contexto e hype)          ~9 min
+  2) O mapa das siglas e como isso funciona   ~14 min
+  3) O que a IA NÃO faz e os 3 casos reais    ~11 min
+  4) Carreiras e papéis                       ~11 min
 
 Controle de tempo: às 20h05 você PRECISA estar entrando em "O que a IA não faz".
-Se estiver atrasado, corte "hype x realidade" e "mitos sobre entrar na área".
+Se estiver atrasado, corte nesta ordem: "onde estamos na curva", o segundo caso de viés
+(Amazon), "três mitos" e a interação.
 """)
 
 s = sl_statement("Vamos começar por uma pergunta",
@@ -844,7 +866,7 @@ A caixa maior é INTELIGÊNCIA ARTIFICIAL. É o guarda-chuva: qualquer sistema q
 uma tarefa que a gente associa à inteligência humana. Um sistema de regras "se o cliente
 tem mais de 3 atrasos, marque como risco" já é IA num sentido amplo.
 
-Dentro dela tem MACHINE LEARNING. E aqui muda uma coisa fundamental: em vez de alguém
+Dentro dela tem MACHINE LEARNING. E aqui a lógica se inverte: em vez de alguém
 escrever a regra, o sistema DESCOBRE a regra sozinho, olhando exemplos. Você não diz o
 que é fraude. Você mostra 100 mil transações, marca quais foram fraude, e o modelo
 aprende o padrão.
@@ -925,7 +947,7 @@ está vivendo."
 
 s = sl_statement("Onde estamos na curva",
                  "Estamos no momento em que a IA está sendo\nsuperestimada no curto prazo\ne subestimada no longo prazo.",
-                 "Sua vantagem competitiva não é o hype. É saber separar o que funciona do que é promessa.")
+                 "Sua vantagem competitiva vai estar em separar o que funciona do que é promessa, não em acompanhar o hype.")
 notes(s, "2 min", "DESCARTÁVEL, 2º item a cortar", EU,
       """
 "Eu quero fazer uma calibragem honesta com vocês.
@@ -1126,7 +1148,7 @@ s = sl_table("Escolher a ferramenta certa", "A escada: quando usar o quê",
               ["Otimização", "O que eu devo fazer?", "Definir a melhor rota de entrega ou o melhor preço"],
               ["IA Generativa", "Como seria isso escrito ou criado?", "Resumir 500 chamados de suporte e classificar o motivo"],
               ["Agentes de IA", "Faça isso por mim, do início ao fim", "Levantar, analisar, redigir e enviar o relatório sozinho"]],
-             subtitle="A pergunta certa não é \"como uso IA aqui?\". É \"qual degrau esse problema pede?\"",
+             subtitle="A pergunta certa é \"qual degrau esse problema pede?\", nunca \"como uso IA aqui?\"",
              widths=[0.24, 0.28, 0.48])
 notes(s, "3 min", "ESSENCIAL", EU,
       """
@@ -1147,8 +1169,8 @@ suporte.
 
 E o sexto são agentes: faça isso por mim, do começo ao fim.
 
-E aqui vai um dos conselhos mais valiosos que eu posso dar para vocês em toda a
-carreira: a pergunta certa NUNCA é "como eu uso IA aqui?". A pergunta certa é "qual
+E aqui vai um conselho que eu queria ter recebido no início da minha
+carreira: nunca pergunte "como eu uso IA aqui?". Pergunte "qual
 degrau desta escada esse problema pede?". Um monte de gente resolve com IA generativa
 o que uma tabela dinâmica resolveria melhor, mais barato e mais confiável."
 """)
@@ -1205,49 +1227,117 @@ responsabilidade continua sendo de uma pessoa, e essa pessoa pode ser você.
 E sexto, o que todo mundo esquece: ela não é de graça."
 """)
 
-s = sl_bullets("Caso real · alucinação", "O advogado que citou processos que nunca existiram",
-               [("Nova York, 2023", "advogados usaram o ChatGPT para pesquisar jurisprudência de um caso"),
-                ("O modelo devolveu 6 decisões judiciais", "com nome das partes, números e citações completas"),
-                ("Nenhuma delas existia", "estavam todas inventadas, mas soavam perfeitamente reais"),
-                ("A petição foi protocolada assim mesmo", "sem ninguém conferir a fonte"),
-                ("O juiz descobriu e aplicou sanção aos advogados", "o caso virou referência mundial"),
-                ("A lição não é \"não use IA\"", "é: IA generativa não é fonte. Ela é ponto de partida que exige verificação.")],
+s = sl_bullets("Caso real · alucinação", "A IA que inventou lei, jurisprudência e número de processo",
+               [("Londrina, julho de 2025", "um advogado usou IA para redigir petições numa ação sobre benefício do INSS"),
+                ("As peças citavam artigos da Lei do Mandado de Segurança", "que simplesmente não existem"),
+                ("Citavam também jurisprudência e números de processo", "que não constam em base nenhuma de tribunal"),
+                ("O juiz federal caracterizou litigância de má-fé", "e ato atentatório à dignidade da Justiça"),
+                ("Multa de 20 salários mínimos e ofício à OAB do Paraná", "o mesmo já tinha acontecido em Nova York, em 2023"),
+                ("A lição não é \"não use IA\"", "é: IA generativa não é fonte. Ela compõe, não consulta.")],
                subtitle="Isso se chama alucinação, e é comportamento esperado, não defeito raro.")
 notes(s, "2 min", "ESSENCIAL", EU,
       """
 Conte como história. Baixe o ritmo. Este é o slide que a sala vai lembrar semana que vem.
 
-"Deixa eu contar um caso real que virou referência mundial.
+"Deixa eu contar um caso brasileiro, de julho de 2025.
 
-Nova York, 2023. Dois advogados estão preparando um processo e usam o ChatGPT para
-pesquisar jurisprudência. O modelo devolve seis decisões judiciais anteriores, com nome
-das partes, número do processo, citação, tudo formatado direitinho.
+Um advogado em Londrina está tocando uma ação sobre restabelecimento de benefício por
+incapacidade do INSS. Coisa do dia a dia da Justiça Federal. E ele usa IA para redigir as
+petições.
 
-Eles protocolam a petição com aquilo. Aí a parte contrária vai procurar as decisões...
-e nenhuma delas existe. Todas as seis foram inventadas pelo modelo.
+Aí vem a parte impressionante. O que a IA produziu não foi só jurisprudência inventada.
+Ela citou artigos da Lei do Mandado de Segurança que não existem. Citou legislação
+processual fictícia. E citou números de processo que não constam em base nenhuma de
+tribunal do país.
 
-O juiz descobre e aplica sanção aos advogados.
+O juiz federal foi conferir, não achou nada, e escreveu na decisão que as peças
+apresentavam referências doutrinárias, legais e jurisprudenciais inexistentes.
+Caracterizou litigância de má-fé e ato atentatório à dignidade da Justiça. Multa de vinte
+salários mínimos, e ofício para a OAB do Paraná.
 
-Agora, a lição aqui não é "não use IA". Eles usariam de novo se tivessem feito uma coisa
-só: conferir. A lição é que IA generativa NÃO é fonte. Ela é ponto de partida. E ponto de
-partida exige verificação.
+E olha, isso não é uma peculiaridade brasileira: em 2023 aconteceu exatamente a mesma
+coisa em Nova York, com dois advogados que citaram seis decisões judiciais inventadas.
 
-Isso tem nome: chama alucinação. E é importante vocês entenderem que isso é comportamento
-ESPERADO do funcionamento dele, não um bug raro que vão consertar semana que vem."
+Agora, a lição aqui não é "não use IA". Esse advogado usaria de novo se tivesse feito uma
+coisa só: conferir. A lição é que IA generativa NÃO é fonte. Lembram do que eu falei há
+pouco? Ela não consulta um banco de respostas, ela COMPÕE a sequência mais provável. E
+"número de processo plausível" é fácil de compor.
+
+Isso tem nome: chama alucinação. E é comportamento ESPERADO do funcionamento dele, não um
+bug raro que vão consertar semana que vem."
 """,
-      "Caso: Mata v. Avianca, Southern District of New York, 2023. Amplamente noticiado.")
+      """
+Fonte: 2ª Vara Federal de Londrina (PR), decisão de 1º de julho de 2025, juiz federal
+substituto Igor de Lazari Barbosa Carneiro. Amplamente noticiado.
+Caso dos EUA citado de passagem: Mata v. Avianca, Nova York, 2023.
+Se alguém no chat pedir a fonte, prometa postar o link no Discord.
+""")
 
-s = sl_bullets("Caso real · viés", "O sistema de recrutamento que aprendeu a rejeitar mulheres",
+s = sl_bullets("Caso real · viés", "O sistema que reconheceu o rosto errado",
+               [("Aracaju, abril de 2024", "um torcedor de 23 anos foi algemado e retirado do estádio na final do campeonato"),
+                ("O reconhecimento facial da polícia o apontou como foragido", "ele não havia cometido crime nenhum"),
+                ("Depois da repercussão, o estado suspendeu o uso do sistema", "o erro não estava no código, estava na base de treino"),
+                ("Estudo da Defensoria Pública da União com o CESeC, maio de 2025", "mapeou 24 casos de falha entre 2019 e abril de 2025"),
+                ("Mais da metade das abordagens por reconhecimento facial", "resultou em identificação equivocada"),
+                ("A taxa de erro é muito maior para pessoas negras e indígenas", "porque a base que treinou o modelo não representava essas pessoas")],
+               subtitle="Ninguém programou o sistema para errar mais com um grupo. Ele aprendeu isso dos dados.")
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+Mude o tom: mais sério, mais devagar. Conte primeiro a história da pessoa, depois o dado.
+Enquadramento TÉCNICO, não político: base de treino não representativa gera taxa de erro
+diferente por grupo. Não editorialize, o fato sustenta sozinho.
+
+"Agora um caso brasileiro, de abril de 2024.
+
+Final do campeonato sergipano, Arena Batistão, em Aracaju. Um rapaz de 23 anos, personal
+trainer, está assistindo ao jogo. O sistema de reconhecimento facial da polícia aponta
+ele como um foragido da Justiça. Ele é algemado e retirado do estádio na frente de
+milhares de pessoas.
+
+Ele não tinha cometido crime nenhum. Era erro do sistema. Depois da repercussão, o estado
+suspendeu o uso do reconhecimento facial.
+
+E aqui vem a parte que interessa para a gente tecnicamente. Isso não foi um azar isolado.
+Em maio de 2025 saiu um estudo da Defensoria Pública da União junto com o CESeC, que
+mapeou 24 casos de falha entre 2019 e abril de 2025. A conclusão foi que MAIS DA METADE
+das abordagens policiais motivadas por reconhecimento facial resultaram em identificação
+equivocada.
+
+E o erro não é distribuído por igual. A taxa é muito maior para pessoas negras e
+indígenas. Por quê? Não porque alguém escreveu uma regra racista no código. Porque a base
+de imagens que treinou esses modelos não representava essas pessoas na mesma proporção. O
+modelo aprendeu a distinguir bem os rostos que ele viu muito, e mal os que ele viu pouco.
+
+Lembra do que eu falei lá atrás? A IA não é neutra. Ela aprende com os dados do mundo, e
+se os dados forem incompletos, ela vai errar de forma sistemática, e com aparência de
+objetividade. Que é o pior tipo de erro, porque é o mais difícil de contestar."
+""",
+      """
+Fontes: caso de Aracaju, abril de 2024, amplamente noticiado. Estudo da Defensoria Pública
+da União com o Centro de Estudos de Segurança e Cidadania (CESeC), divulgado em 7 de maio
+de 2025, com pesquisa de campo entre julho e dezembro de 2024.
+O número de "10 a 100 vezes maior" para pessoas negras, indígenas e asiáticas vem da
+pesquisa internacional citada nesse mesmo relatório. Use só se perguntarem, e atribua.
+NÃO transforme em discussão política. O enquadramento é técnico: dado de treino
+não representativo gera taxa de erro desigual.
+""")
+
+s = sl_bullets("Caso real · viés · 2", "O sistema de recrutamento que aprendeu a rejeitar mulheres",
                [("A Amazon desenvolveu uma IA para triar currículos", "objetivo: acelerar a seleção técnica"),
                 ("O modelo foi treinado com 10 anos de currículos da própria empresa", "e com quem havia sido contratado"),
                 ("O histórico do setor era majoritariamente masculino", "o modelo aprendeu esse padrão como sinal de sucesso"),
                 ("Ele passou a penalizar currículos com marcas femininas", "sem que ninguém tivesse programado isso"),
-                ("O projeto foi descontinuado em 2018", "o viés não estava no código, estava nos dados"),
+                ("O projeto foi descontinuado em 2018", "de novo: o viés não estava no código, estava nos dados"),
                 ("Por isso ética não é um bloco à parte deste curso", "é uma pergunta que a gente faz em toda etapa")],
-               subtitle="Ninguém escreveu uma regra discriminatória. O modelo aprendeu a discriminar sozinho.")
-notes(s, "2 min", "ESSENCIAL", EU,
+               subtitle="Mesmo mecanismo, outro setor. E este aqui é sobre selecionar pessoas.")
+notes(s, "2 min", "DESCARTÁVEL: é o 1º corte deste trecho", EU,
       """
-"Segundo caso, e esse é ainda mais desconfortável.
+Este slide existe para mostrar que o mecanismo do slide anterior não é exclusivo de
+reconhecimento facial. Se o bloco estiver atrasado, corte este e siga direto para as
+quatro perguntas de uso responsável.
+
+"E não pensem que isso é um problema só de reconhecimento facial. É o mesmo mecanismo em
+qualquer domínio.
 
 A Amazon construiu uma IA para triar currículos. Ideia ótima: acelerar a seleção.
 
@@ -1259,14 +1349,16 @@ aprendeu isso como se fosse sinal de sucesso. Ele começou a penalizar currícul
 tinham marcas femininas.
 
 Ninguém escreveu uma regra dizendo "rejeite mulheres". Ninguém. O modelo aprendeu a
-discriminar sozinho, olhando o passado.
+discriminar sozinho, olhando o passado. O projeto foi descontinuado em 2018.
 
-O projeto foi descontinuado em 2018.
+E eu vou ser honesto com vocês sobre por que eu escolhi justamente este caso: porque vocês
+estão dentro de um processo seletivo agora. Se a gente fosse automatizar essa seleção com
+um modelo treinado no histórico de quem já foi contratado nessa área, a gente ia repetir o
+passado dessa área. Isso é uma coisa que quem trabalha com dados precisa ter na cabeça
+desde o primeiro dia.
 
 E é exatamente por isso que neste curso ética não vai ser uma aula separada no final,
-daquelas que todo mundo pula. Vai ser uma pergunta que a gente faz em toda etapa: de onde
-veio esse dado? Quem ele representa? Quem ele deixa de fora? Quem é prejudicado se o
-modelo errar?"
+daquelas que todo mundo pula. Vai ser uma pergunta que a gente faz em toda etapa."
 """,
       "Amazon, projeto descontinuado em 2018. Reportado pela Reuters. Fato público e documentado.")
 
@@ -1279,7 +1371,7 @@ s = sl_cards("Uso responsável", "Quatro perguntas para fazer em todo projeto",
                "Errar numa recomendação de filme e errar numa negativa de crédito não são a mesma coisa."),
               ("Eu consigo explicar essa decisão para uma pessoa afetada?",
                "Se a resposta é não, talvez você não devesse usar esse modelo para isso.")],
-             subtitle="Isso não é um bloco de ética. É uma checklist que atravessa as 8 semanas.",
+             subtitle="Quatro perguntas curtas, para levar pelas 8 semanas inteiras.",
              cols=2, card_h=2.4)
 notes(s, "2 min", "ESSENCIAL (mas passe rápido)", EU,
       """
@@ -1296,7 +1388,7 @@ gente que está no mercado há anos."
 """)
 
 s = sl_section("03", "E quem faz isso acontecer?",
-               "Os papéis que existem no mundo de dados e IA", "≈ 20h12  ·  12 minutos")
+               "Os papéis que existem no mundo de dados e IA", "≈ 20h14  ·  11 minutos")
 notes(s, "20 s", "ESSENCIAL", EU,
       """
 Slide de virada. Faça a ponte:
@@ -1619,7 +1711,7 @@ s = sl_two_col("Fase 1 · a tradução", "De problema de negócio para pergunta 
                 "\"Dá para classificar automaticamente o motivo dos chamados de suporte?\"",
                 "\"Dá para gerar o resumo executivo mensal a partir da base?\"",
                 "Específico, mensurável, com prazo"],
-               subtitle="Essa tradução é uma das habilidades mais valiosas e menos ensinadas da área.",
+               subtitle="Poucos cursos ensinam essa tradução. A maior parte do trabalho está aqui.",
                lcolor=MUTED, rcolor=NAVY)
 notes(s, "4 min", "ESSENCIAL", FELIPE,
       """
@@ -1636,8 +1728,8 @@ de compra distinto?
 "Quero usar IA no atendimento", essa é a pior de todas, porque já começa pela solução,
 vira: dá para classificar automaticamente o motivo dos chamados de suporte?
 
-Essa tradução é uma das habilidades mais valiosas da nossa área. E é uma das menos
-ensinadas. Vocês vão treinar isso na quinta-feira."
+Poucos cursos ensinam essa tradução, e é aqui que está a maior parte do trabalho de
+verdade. Vocês vão treinar isso na quinta-feira."
 """,
       "Ponte com a quinta: o Canvas do Problema é exatamente a ferramenta que estrutura essa tradução.")
 
@@ -1671,7 +1763,7 @@ frases, ainda NÃO é hora de abrir o dado."
 
 s = sl_cards("Fase 2", "Conseguir os dados: de onde eles vêm",
              [("Sistemas internos",
-               "Banco de dados do ERP, CRM, sistema de vendas, sistema de atendimento.\n\nÉ a fonte mais comum e a mais valiosa, e quase sempre precisa de tratamento."),
+               "Banco de dados do ERP, CRM, sistema de vendas, sistema de atendimento.\n\nÉ a fonte mais comum, e quase sempre precisa de tratamento antes de virar análise."),
               ("Logs e eventos",
                "Cliques, acessos, uso do produto, sensores.\n\nVolume gigante, muito ricos em comportamento, difíceis de organizar."),
               ("Fontes externas e públicas",
@@ -1687,7 +1779,7 @@ notes(s, "3 min", "ESSENCIAL", FELIPE,
       """
 "Fase 2: onde estão os dados?
 
-Sistemas internos: ERP, CRM, sistema de vendas. É a fonte mais comum e a mais valiosa,
+Sistemas internos: ERP, CRM, sistema de vendas. É a fonte mais comum de todas,
 e quase sempre precisa de tratamento pesado.
 
 Logs e eventos: clique, acesso, uso do produto, sensor. Volume gigante, muito ricos, e
@@ -1965,7 +2057,7 @@ s = sl_bullets("Fase 8", "O modelo envelhece, e ninguém te avisa",
                 ("Por isso se monitora: dados de entrada, desempenho e uso", "não só se o sistema está no ar"),
                 ("Retreinar faz parte do ciclo de vida", "não é sinal de que você errou"),
                 ("E o mais importante: alguém precisa ser dono disso", "projeto sem dono depois do lançamento vira ruína silenciosa")],
-               subtitle="Solução de dados não é obra pronta. É jardim: precisa de manutenção.")
+               subtitle="Solução de dados é jardim, não obra pronta: precisa de manutenção.")
 notes(s, "3 min", "ESSENCIAL", FELIPE,
       """
 "Fase 8, e é a mais esquecida de todas.
@@ -1987,7 +2079,7 @@ E a última linha é organizacional, não técnica: alguém precisa ser DONO dis
 lançamento. Projeto sem dono vira ruína silenciosa: continua rodando, continua errando,
 e ninguém percebe.
 
-Solução de dados não é obra pronta. É jardim: precisa de manutenção."
+Solução de dados é jardim, não obra pronta: precisa de manutenção."
 """)
 
 s = sl_table("Ponta a ponta", "Um caso completo: previsão de cancelamento",

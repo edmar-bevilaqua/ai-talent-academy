@@ -34,7 +34,7 @@ trate isso como bônus, não como parte necessária da aula.
 
 ## 2. As duas interações do deck
 
-### Interação 1 · “Qual papel te chamou atenção?” · slide 37 · ~20h28 · 2 min
+### Interação 1 · “Qual papel te chamou atenção?” · slide 38 · ~20h28 · 2 min
 
 **Múltipla escolha (enquete nativa)**
 > Qual desses papéis mais te chamou atenção hoje?
@@ -53,7 +53,7 @@ Se já soubessem, o curso não faria sentido.”*
 
 ---
 
-### Interação 2 · “Onde os projetos travam?” · slide 57 · ~21h42 · 2 min
+### Interação 2 · “Onde os projetos travam?” · slide 58 · ~21h42 · 2 min
 
 **Múltipla escolha (enquete nativa)**
 > Em qual fase você acha que a maioria dos projetos de IA trava?
@@ -82,9 +82,9 @@ Além das duas enquetes, use estas ao longo da aula. São o que realmente segura
 | 19h00 às 19h10 | “Escreva no chat seu nome e sua cidade” |
 | Slide 13 | “Joga no chat um número: quantas vezes você usou IA hoje?” |
 | Slide 15 (siglas) | “Quem entendeu a diferença entre ML e GenAI manda um 👍 no chat” |
-| Slide 28 (advogado) | “Alguém aqui já pegou o ChatGPT inventando alguma coisa? Conta no chat” |
-| Slide 43 (tradução) | “Como você traduziria ‘quero usar IA no atendimento’? Chat!” |
-| Slide 51 (fraude 99%) | Faça a pergunta e **espere 5 segundos em silêncio** antes de revelar |
+| Slide 28 (advogado do INSS) | “Alguém aqui já pegou o ChatGPT inventando alguma coisa? Conta no chat” |
+| Slide 44 (tradução) | “Como você traduziria ‘quero usar IA no atendimento’? Chat!” |
+| Slide 52 (fraude 99%) | Faça a pergunta e **espere 5 segundos em silêncio** antes de revelar |
 | Antes do intervalo | “Deixem as dúvidas no chat que a gente responde na volta” |
 
 **Regra de ouro para 190 pessoas:** nunca peça para alguém abrir o microfone. A latência
@@ -106,9 +106,9 @@ ruído e vocês perdem as boas perguntas.
    coisa. Essa merece resposta em voz alta na hora.
 4. Postar os links nos momentos combinados:
    - **Slide 11** → convite do Discord
-   - **Slide 37** → link da enquete
-   - **Intervalo (slide 38)** → Discord de novo
-   - **Slide 63** → Discord pela última vez
+   - **Slide 38** → link da enquete
+   - **Intervalo (slide 39)** → Discord de novo
+   - **Slide 64** → Discord pela última vez
 5. Guardar as perguntas não respondidas para o Discord.
 
 **Configuração da sala:** microfones em mudo ao entrar, sem permissão de desmutar; chat

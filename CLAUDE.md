@@ -82,16 +82,52 @@ sm = difflib.SequenceMatcher(None, [x.split("\n")[0] for x in a],
 
 ---
 
-## 3. As três regras de estilo inegociáveis
+## 3. As regras de estilo inegociáveis
 
 Estas regras vieram do usuário e valem para **todo** material novo: slides, notas de
-apresentador e documentos markdown.
+apresentador e documentos markdown. As quatro primeiras (3.1 a 3.4) são checáveis por
+código e falham a geração se violadas. A quinta (3.5, vícios de escrita de IA) é editorial:
+não dá para assertar por regex com segurança, então depende de revisão consciente antes de
+considerar o texto pronto.
 
-### 3.1 Roboto em 100% dos textos
+### 3.1 Roboto em 100% dos textos, sem exceção
 
 Toda run recebe `r.font.name = "Roboto"`. É a fonte do template oficial da White Cube.
+Vale para qualquer texto: título, corpo, legenda de diagrama, rodapé, nota do apresentador.
+Não existe texto "pequeno demais para importar" ou "decorativo demais para contar": se é
+uma run de texto no `.pptx`, é Roboto.
 
-### 3.2 Um único tamanho de fonte por caixa de texto
+### 3.2 Tamanho mínimo de 17pt em todo texto de leitura
+
+Piso de legibilidade: **nada abaixo de 17pt**, com duas exceções documentadas e só essas
+duas. A régua veio de comparar a versão final que o usuário efetivamente apresentou em aula
+(`docs/AI-Talent-Academy-Aula01-editada.pptx` e o PDF irmão) contra o que o gerador produzia
+antes: corpo de card a 15,5pt, célula de tabela a 15pt e texto de card do pipeline a 14pt
+estavam pequenos demais para uma sala de 190 pessoas assistindo por streaming compartilhado.
+
+As constantes do gerador refletem isso: `S_SUB`, `S_BULLET`, `S_CARD_T`, `S_CARD_B`,
+`S_TABLE_H`, `S_TABLE_C`, `S_BIG`, `S_SRC`, `S_TIMELINE`, `S_PIPELINE_B` e
+`S_NESTED_LEGEND` são todas ≥ `S_MIN` (17), e há um `assert` logo abaixo das constantes que
+quebra a geração se alguma cair abaixo disso.
+
+**As duas exceções documentadas**, ambas confirmadas na própria versão final aprovada pelo
+usuário:
+
+1. **`S_FOOT` (13pt), o rodapé.** `whitecube.com.br` e o número do slide são mobília da
+   página, não conteúdo de leitura. Na versão final o usuário manteve o rodapé em 13pt em
+   todos os 64 slides. Não force para 17.
+2. **Os rótulos internos dos três anéis externos do `sl_nested`** (o diagrama de círculos
+   concêntricos IA → ML → Deep Learning → GenAI). O espaço físico dentro dos anéis mais
+   finos não comporta 17pt sem quebrar o desenho ou estourar o anel seguinte. Na versão
+   final do usuário esses rótulos ficam em 13, 14 e 15pt (o anel mais interno, GenAI, já
+   nasce maior e fica em 17). Aumente até o ponto em que o desenho aguenta, mas não force
+   a igualdade com o piso geral.
+
+Qualquer outro texto abaixo de 17pt que aparecer numa aula nova é bug, não exceção nova.
+Se um layout genuinamente precisar de uma terceira exceção, pare e pergunte ao usuário
+antes de adicionar. Não decida sozinho que "esse caso também é especial".
+
+### 3.3 Um único tamanho de fonte por caixa de texto
 
 Nunca alterne tamanho dentro do mesmo bloco de texto. Consequência prática de arquitetura:
 título e corpo de um card ficam em **caixas de texto separadas**. O mesmo vale para célula
@@ -99,7 +135,7 @@ de tabela, legenda de diagrama e qualquer par título/descrição.
 
 Negrito e cor podem variar dentro do bloco. Só o **tamanho** é que não pode.
 
-### 3.3 Zero travessões
+### 3.4 Zero travessões
 
 Proibidos `—` (em dash, U+2014) e `–` (en dash, U+2013). Substitua preservando a semântica:
 
@@ -119,14 +155,48 @@ Permitidos e usados livremente: hífen em palavra composta (`segunda-feira`), in
 `·`, seta `→`, multiplicação `×`, e o traço de caixa `─` (U+2500) usado como separador
 dentro das notas do apresentador.
 
-### 3.4 A validação é automática
+### 3.5 Vícios de escrita que soam a IA
+
+O usuário mandou o artigo "9 vícios de escrita que dão aquele cheirinho de IA" (comunidade
+O Novo Mercado, copywriting) e pediu para internalizar os padrões e **nunca reproduzi-los**
+em nada que este repositório gerar: slides, roteiro, e-mails, planos, glossário. A lista
+completa, adaptada:
+
+| # | Vício | Exemplo do artigo | Como evitar aqui |
+|---|---|---|---|
+| 1 | Título Com Todas As Palavras Maiúsculas | "Como Aumentar Suas Vendas Em 2024" | Use frase normal: só a primeira palavra e nomes próprios em maiúscula. Sigla legítima (IA, SQL, LGPD) não conta como violação |
+| 2 | Pergunta retórica em série | "A verdade? Investir cedo muda tudo." | Uma vez no texto todo tudo bem; várias vezes no mesmo bloco, não |
+| 3 | Título com dois-pontos como fórmula fixa | "Renda variável: o que os investidores não te contam" | Prefira título direto ou pergunta. Nota: `"Fase 1: Tradução"` **não** é este vício, é rótulo estrutural numerado, não manchete persuasiva |
+| 4 | Maiúscula depois de dois-pontos no meio da frase | "Ela tinha um objetivo claro: Conquistar novos clientes" | Em português, a frase continua em minúscula. Exceção real: fala, citação, enumeração ou nome próprio |
+| 5 | Vocabulário genérico de robô | insight, crucial, fundamental, essencial, mergulhar, navegar, revolucionário, inspirador, valioso, significativo, "em um mundo", "não apenas... como também", otimizar, contínuo, vital | Troque por linguagem concreta, específica do domínio. `ESSENCIAL`/`DESCARTÁVEL` como marcação de corte no roteiro não é este vício: é rótulo operacional, não adjetivo decorativo |
+| 6 | Contraste raso "Não é X. É Y." | "Não é só investir. É construir patrimônio." | Vale uma vez no deck inteiro, no máximo. Prefira fundir numa frase só, ou inverter a ordem |
+| 7 | Repetição em escadinha | "Você não precisa de outro simulador. Você não precisa de outra planilha. Você só precisa..." | Ok como recurso de fala pontual (o roteiro é falado em voz alta), mas nunca em prosa escrita nem mais de uma vez por bloco |
+| 8 | Adjetivo que enfeita sem explicar | "retorno incrível", "estratégia sólida", "crescimento extraordinário" | Troque por dado concreto: risco baixo, prazo curto, taxa travada, número específico |
+| 9 | "Sem X. Sem Y. Só Z." | "Sem dicas milagrosas. Sem enrolação. Só estratégia." | Evite a fórmula. Se quiser o efeito de lista, use bullets de verdade |
+
+**Isso já rendeu correção real neste repositório**, não é regra só teórica: uma varredura
+em `scripts/gerar_slides_aula01.py` achou e corrigiu "fundamental" (vício 5), quatro usos de
+"valioso/valiosa" (vício 5 e 8) e cinco ocorrências do contraste "não é X. É Y." (vício 6),
+incluindo o "solução de dados não é obra pronta. É jardim" que virou "solução de dados é
+jardim, não obra pronta: precisa de manutenção", preservando a metáfora mas quebrando o
+esqueleto de frase repetido.
+
+**Como aplicar ao escrever conteúdo novo:** antes de considerar um bloco de texto pronto,
+releia contra esta tabela. Não existe assert de código para isso (linguagem natural não dá
+pra regex com segurança sem gerar falsos positivos), então é revisão manual mesmo. Um
+bullet com "cabeça em negrito + explicação" (o padrão `rich_block` usado no deck inteiro)
+não é o vício 6: é a estrutura de bullet do projeto, consistente e repetida de propósito.
+
+### 3.6 A validação é automática (regras 3.1 a 3.4)
 
 O fim de `scripts/gerar_slides_aula01.py` tem um bloco que percorre todos os slides e
 **levanta erro antes de salvar** se encontrar: travessão em texto ou nota, mais de um
-tamanho de fonte na mesma caixa, ou fonte diferente de Roboto.
+tamanho de fonte na mesma caixa, ou fonte diferente de Roboto. Um segundo `assert`, logo
+após a definição das constantes de tamanho, garante que nenhuma delas caiu abaixo de
+`S_MIN`.
 
-Copie esse bloco para qualquer gerador novo. Se o script salvar, as três regras foram
-cumpridas.
+Copie os dois blocos para qualquer gerador novo. Se o script salvar, as quatro regras
+mecânicas foram cumpridas. A regra 3.5 (vícios de IA) ainda precisa de leitura humana.
 
 ---
 
@@ -177,20 +247,26 @@ mudança de bloco e vira pausa para os olhos.
 ### 4.4 Tamanhos de fonte
 
 Definidos como constantes no topo do gerador. Não invente tamanhos novos sem necessidade.
+Todas, exceto `S_FOOT`, são ≥ `S_MIN` (17), por causa da regra 3.2. Isso é verificado por
+`assert` logo depois da definição das constantes.
 
 | Constante | pt | Papel |
 |---|---|---|
 | `S_KICKER` | 20 | Linha de apoio em caixa alta, azul, acima do título |
 | `S_TITLE` | 40 | Título do slide |
+| `S_MIN` | 17 | Piso de legibilidade. Referência, não usada direto em texto |
 | `S_SUB` | 17 | Subtítulo |
 | `S_BULLET` | 21 | Itens de lista |
 | `S_CARD_T` | 20 | Título de card |
-| `S_CARD_B` | 15,5 | Corpo de card |
-| `S_TABLE_H` | 16 | Cabeçalho de tabela |
-| `S_TABLE_C` | 15 | Célula de tabela |
+| `S_CARD_B` | 17 | Corpo de card |
+| `S_TABLE_H` | 18 | Cabeçalho de tabela |
+| `S_TABLE_C` | 17 | Célula de tabela |
 | `S_BIG` | 36 | Frase de declaração |
 | `S_SRC` | 18 | Fonte ou complemento da declaração |
-| `S_FOOT` | 13 | Rodapé |
+| `S_TIMELINE` | 17 | Texto de cada marco da linha do tempo |
+| `S_PIPELINE_B` | 17 | Descrição de cada card do pipeline |
+| `S_NESTED_LEGEND` | 17 | Texto da legenda ao lado do diagrama de círculos |
+| `S_FOOT` | 13 | Rodapé. **Única exceção** ao piso de 17pt (regra 3.2) |
 
 ### 4.5 Assinatura de cabeçalho
 
@@ -203,6 +279,39 @@ negrito) acima do título (cinza, regular).
 `whitecube.com.br` à esquerda, número do slide à direita, ambos em `S_FOOT`. O contador é
 global (`_n["i"]`), incrementado por `footer()`, então **todo slide precisa chamar
 `footer()` exatamente uma vez** ou a numeração sai errada.
+
+### 4.7 Disposição de objetos: lições da versão final
+
+O usuário pediu atenção a "disposição de objetos na tela" depois de comparar o gerador
+contra a versão que ele efetivamente editou e apresentou. Três aprendizados concretos:
+
+1. **Conector de virada de linha em grades de card.** Num `sl_pipeline` com mais de uma
+   linha (8 passos em 2 linhas de 4, por exemplo), sem um conector visual entre o último
+   card de uma linha e o primeiro da próxima, o olho para no fim da linha e não continua a
+   leitura. O `sl_pipeline` já resolve isso: quando `c == per_row - 1` (última coluna) e
+   ainda há próximo item, desenha um chevron na margem verdadeira (à esquerda de `ML`),
+   alinhado ao centro vertical da linha **seguinte**, não da atual. Reaproveite esse padrão
+   em qualquer grade nova que quebre linha.
+
+2. **Slides de declaração (`sl_statement`) sobram muito espaço à direita quando o texto é
+   curto.** O fundo `BG_NAVY` deixa a metade direita do slide vazia por padrão. Na versão
+   final o usuário preencheu isso, quando fazia sentido, com uma ilustração pequena e
+   relacionada ao conceito (por exemplo, uma navalha ao lado da frase sobre a "regra do
+   baseline", fazendo o trocadilho visual com a Navalha de Ockham), com legenda em
+   `S_SRC` avisando "(Imagem meramente ilustrativa)". O gerador **não** faz isso
+   automaticamente, porque não existe hoje uma biblioteca de ícones/ilustrações no
+   `assets/`. Se o usuário fornecer uma imagem relevante para um `sl_statement` específico,
+   é legítimo posicioná-la na metade direita; não crie isso especulativamente sem uma
+   imagem real para usar.
+
+3. **Slides "hero" (bio dos professores, capa) recebem polimento manual fora do gerador.**
+   O slide "Os professores" na versão final tem foto circular, ícones de GitHub/LinkedIn,
+   link clicável e QR code por pessoa. Isso é montado à mão no Canva/PowerPoint depois da
+   importação, não no `python-pptx`: gerar QR code e recortar foto em círculo por código
+   é engenharia cara para um conteúdo curado manualmente (fotos e bios reais). O gerador
+   entrega a versão de texto (`sl_cards` com nome, cargo, formação), e a curadoria visual
+   final acontece depois. Isso é divergência aceita entre o `.pptx` gerado e o `.pptx`
+   apresentado; não tente replicar no script.
 
 ---
 
@@ -348,13 +457,19 @@ import. O tamanho 20 × 11,25 já bate com o template, então não há reescala.
 
 Use **apenas casos públicos e verificáveis**. Nada de dados, clientes ou cases internos.
 
+**Prefira o caso brasileiro ao equivalente estrangeiro.** Numa sala de 190 brasileiros, um
+caso local pega muito mais. Quando o caso estrangeiro for o mais conhecido, cite-o em uma
+linha dentro do caso brasileiro, para mostrar que o fenômeno é sistêmico e não uma
+peculiaridade local.
+
 Casos já usados e validados no deck da aula 1:
 
 | Caso | Fato |
 |---|---|
 | Netflix Prize | US$ 1 milhão, concluído em 2009 |
-| Alucinação | Mata v. Avianca, Southern District of New York, 2023 |
-| Viés | Ferramenta de triagem de currículos da Amazon, descontinuada em 2018 |
+| Alucinação | 2ª Vara Federal de Londrina (PR), 1º/jul/2025. A IA inventou artigos de lei, jurisprudência e números de processo. Multa de 20 salários mínimos e ofício à OAB/PR |
+| Viés (principal) | Reconhecimento facial, Aracaju, abr/2024. Sustentado pelo estudo DPU + CESeC de 7/mai/2025: 24 casos mapeados de 2019 a abr/2025, e mais da metade das abordagens resultou em identificação equivocada |
+| Viés (secundário) | Ferramenta de triagem de currículos da Amazon, descontinuada em 2018 |
 | Marcos históricos | Dartmouth 1956, Deep Blue 1997, deep learning 2012, Transformer 2017, ChatGPT 2022 |
 
 Estatísticas voláteis (por exemplo "X% dos projetos de IA falham") exigem fonte conferida
@@ -391,7 +506,10 @@ Problemas reais que já custaram retrabalho. Confira todos ao criar uma aula nov
 | **Numeração de slide errada** | Números pulam ou repetem | Todo slide chama `footer()` uma vez, e só uma |
 | **Roboto não instalada** | Preview do PowerPoint mostra outra fonte | O `.pptx` está correto. Instale Roboto (fonts.google.com) para conferir localmente. O Canva já tem |
 | **Console quebra com acento** | `UnicodeEncodeError: cp1252` | Grave em arquivo com `encoding="utf-8"` e leia o arquivo |
-| **Linha de tabela com duas linhas** | Texto vaza da faixa alternada | Encurte a célula até caber em uma linha, ou reduza `S_TABLE_C` |
+| **Linha de tabela com duas linhas** | Texto vaza da faixa alternada | Encurte a célula até caber em uma linha, ou aumente a largura da coluna. Nunca reduza `S_TABLE_C` abaixo de `S_MIN` |
+| **Texto pequeno demais numa sala de 190 pessoas** | Corpo de card ou célula de tabela em 14 a 15,5pt, ilegível em tela compartilhada | Piso de 17pt (regra 3.2). Só `S_FOOT` e os rótulos internos do `sl_nested` são exceção documentada |
+| **Grade de cards quebra linha sem aviso visual** | Card 4 termina numa borda, card 5 começa do nada na linha de baixo | Conector de virada de linha na margem verdadeira, ver seção 4.7 |
+| **Texto soa gerado por IA** | Palavra da lista de vícios (insight, crucial, fundamental...), contraste raso "não é X. É Y.", pergunta retórica em série | Releia contra a tabela da regra 3.5 antes de considerar o texto pronto. Não é checável por código |
 
 ---
 
@@ -410,9 +528,11 @@ ai-talent-academy/
 ├── docs/
 │   ├── Proposta Executiva 2 ...pdf        Fonte de verdade do programa
 │   ├── Apresentação_Template_WhiteCube.pptx   Template oficial de marca
+│   ├── AI Talent Academy - Aula 01.pdf        Registro do que foi de fato apresentado
+│   ├── AI-Talent-Academy-Aula01-editada.pptx  Idem, em pptx. Ver nota abaixo
 │   └── aula-01/
 │       ├── README.md                          Índice do pacote da aula
-│       ├── AI-Talent-Academy-Aula01.pptx      Deck gerado (63 slides)
+│       ├── AI-Talent-Academy-Aula01.pptx      Deck gerado (64 slides)
 │       ├── 01-plano-da-aula.md                Cronômetro, cortes, checklists, riscos
 │       ├── 02-roteiro-do-apresentador.md      Gerado a partir das notas do deck
 │       ├── 03-material-de-apoio-participante.md   Glossário, enviado pós-aula
@@ -436,6 +556,16 @@ Se isso for indesejado, a correção é adicionar ao final do `.gitignore`:
 ```
 
 Decisão pendente do usuário. Não altere sem perguntar.
+
+### Sobre `AI Talent Academy - Aula 01.pdf` e `AI-Talent-Academy-Aula01-editada.pptx`
+
+São o registro do que o usuário **efetivamente editou e apresentou em sala**, entregues em
+2026-08-12. Não são a fonte de verdade do conteúdo (essa continua sendo o script, regra 2)
+mas são a referência mais confiável para três coisas: (a) o piso de 17pt de fonte descrito
+na regra 3.2, (b) as lições de disposição de objetos da seção 4.7, e (c) confirmação de que
+o texto ali não usa os vícios de escrita da regra 3.5. Se um comparativo futuro achar
+divergência de CONTEÚDO (não de estilo/layout) entre o gerado e esses arquivos, siga o
+procedimento da seção 2: diff programático, incorporar no script, regerar.
 
 ---
 
@@ -476,11 +606,17 @@ O deck da aula 1 segue uma estrutura que funcionou bem e vale reaproveitar:
 
 ## 12. Estado atual
 
-**Aula 1 (Semana 1, segunda-feira): pronta.** 63 slides, todos com roteiro de fala.
-Identidade White Cube aplicada. As três regras de estilo validadas por asserção.
+**Aula 1 (Semana 1, segunda-feira): já apresentada em sala**, em 2026-08-12. 64 slides,
+todos com roteiro de fala. Identidade White Cube aplicada. As quatro regras mecânicas de
+estilo (3.1 a 3.4) validadas por `assert`; a quinta (3.5, vícios de IA) revisada à mão
+nesta sessão, com correções reais aplicadas no script.
 
-Pendências registradas em `docs/aula-01/README.md`, sendo a única de conteúdo o
-preenchimento da linha `[1 linha sobre o que você faz no dia a dia]` no slide 5.
+O gerador ficou **atrás** da versão que o usuário efetivamente apresentou num ponto
+conhecido e aceito: o slide 5 ("Quem conduz") na versão final tem foto circular, bio
+completa, GitHub, LinkedIn e QR code por pessoa, feitos à mão no Canva. O script ainda
+produz a versão placeholder (`[1 linha sobre o que você faz no dia a dia]`). Isso é a
+divergência documentada na seção 4.7, item 3: não é bug, é o ponto em que o fluxo passa do
+gerador para curadoria manual. Só sincronize se o usuário pedir explicitamente.
 
 **Próximo material a produzir:** aula de quinta-feira da semana 1, o primeiro laboratório.
 Já está prometido nos slides 60 e 61 e no e-mail de pós-aula, com este escopo:

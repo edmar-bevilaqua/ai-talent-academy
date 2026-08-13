@@ -27,10 +27,10 @@ Ao final dos 150 minutos, cada participante deve conseguir:
 | 19h00 | 19h10 | 10 min | Recepção dos participantes | Edmar + moderador | 1 e 2 |
 | 19h10 | 19h30 | 20 min | **Quem é a White Cube?** | Ale e Márcio | 3 |
 | 19h30 | 19h45 | 15 min | **Cronograma e metodologia** | Edmar | 4 a 11 |
-| 19h45 | 20h30 | 45 min | **Introdução ao universo de Dados e IA** | Edmar | 12 a 37 |
-| 20h30 | 20h45 | 15 min | Intervalo | (os dois) | 38 |
-| 20h45 | 21h45 | 60 min | **Ciclo de vida de soluções de dados e IA** | Felipe | 39 a 57 |
-| 21h45 | 22h00 | 15 min | **Encerramento e Q&A** | Felipe + Edmar | 58 a 63 |
+| 19h45 | 20h30 | 45 min | **Introdução ao universo de Dados e IA** | Edmar | 12 a 38 |
+| 20h30 | 20h45 | 15 min | Intervalo | (os dois) | 39 |
+| 20h45 | 21h45 | 60 min | **Ciclo de vida de soluções de dados e IA** | Felipe | 40 a 58 |
+| 21h45 | 22h00 | 15 min | **Encerramento e Q&A** | Felipe + Edmar | 59 a 64 |
 
 ### Marcos de controle (cole isso no seu monitor)
 
@@ -38,10 +38,10 @@ Ao final dos 150 minutos, cada participante deve conseguir:
 |---|---|---|
 | **19h47** | slide 13 (“Quantas vezes você usou IA hoje?”) | metodologia / 4 pilares (9) |
 | **20h05** | slide 22 (“Como um LLM funciona”) | “onde estamos na curva” (18) |
-| **20h20** | slide 27 (“Seis coisas que a IA não faz”) | “três mitos” (36) e a interação (37) |
-| **21h10** | slide 48 (“Fase 5 · escolher a abordagem”) | 3º card de fases 3 e 4 (47) e GenAI-avaliação (52) |
-| **21h35** | slide 55 (“Caso ponta a ponta”) | interação (57) e “quem atua em cada fase” (56) |
-| **21h50** | slide 59 (“Recapitulando”) | encolha o Q&A para 3 min. **Não passe das 22h00.** |
+| **20h20** | slide 27 (“Seis coisas que a IA não faz”) | o 2º caso de viés (30), “três mitos” (37) e a interação (38) |
+| **21h10** | slide 49 (“Fase 5 · escolher a abordagem”) | 3º card de fases 3 e 4 (48) e GenAI-avaliação (53) |
+| **21h35** | slide 56 (“Caso ponta a ponta”) | interação (58) e “quem atua em cada fase” (57) |
+| **21h50** | slide 60 (“Recapitulando”) | encolha o Q&A para 3 min. **Não passe das 22h00.** |
 
 ---
 
@@ -58,29 +58,30 @@ Ao final dos 150 minutos, cada participante deve conseguir:
 | 19 | Programação tradicional × ML | A inversão conceitual que sustenta o curso todo |
 | 22 a 24 | Como um LLM funciona / treino-contexto-inferência / agentes | Alfabetização mínima em GenAI |
 | 25 | A escada: quando usar o quê | O conselho mais prático da noite |
-| 27 a 29 | O que a IA não faz + os 2 casos reais | Calibra expectativa e é o que a sala mais lembra |
-| 32 a 35 | Papéis e carreiras | Foi um dos dois objetivos declarados da aula |
-| 41 | As 8 fases (slide-âncora) | Esqueleto das 7 semanas seguintes |
-| 42 e 43 | Fase 1 (entender o problema + tradução) | É o que será praticado na quinta |
-| 51 | A armadilha das métricas (fraude 99%) | Melhor exemplo do bloco, máxima retenção |
-| 55 | Caso ponta a ponta | Amarra o bloco inteiro |
-| 59 a 61 | Recap + o que vem na quinta + como se preparar | Sem isso, a retenção para a quinta despenca |
+| 27 a 29 | O que a IA não faz + os 2 casos brasileiros | Calibra expectativa e é o que a sala mais lembra |
+| 33 a 36 | Papéis e carreiras | Foi um dos dois objetivos declarados da aula |
+| 42 | As 8 fases (slide-âncora) | Esqueleto das 7 semanas seguintes |
+| 43 e 44 | Fase 1 (entender o problema + tradução) | É o que será praticado na quinta |
+| 52 | A armadilha das métricas (fraude 99%) | Melhor exemplo do bloco, máxima retenção |
+| 56 | Caso ponta a ponta | Amarra o bloco inteiro |
+| 60 a 62 | Recap + o que vem na quinta + como se preparar | Sem isso, a retenção para a quinta despenca |
 
 ### 🟡 Descartável: ordem de corte
 
-1. **Slide 36:** Três mitos sobre entrar na área
-2. **Slide 18:** Onde estamos na curva (hype × realidade)
-3. **Slide 37:** Interação (papel preferido)
-4. **Slide 9:** Metodologia / 4 pilares
-5. **Slide 33:** Papel a papel 1 (leia só os títulos dos cards, sem detalhar)
-6. **Slide 57:** Interação (onde os projetos travam)
-7. **Slide 47:** 3º card de “Explorar e preparar”
-8. **Slide 61:** 3º card de “Como aproveitar os próximos 3 dias”
+1. **Slide 30:** Segundo caso de viés (Amazon). O caso brasileiro do slide 29 já entrega a ideia
+2. **Slide 37:** Três mitos sobre entrar na área
+3. **Slide 18:** Onde estamos na curva (hype × realidade)
+4. **Slide 38:** Interação (papel preferido)
+5. **Slide 9:** Metodologia / 4 pilares
+6. **Slide 34:** Papel a papel 1 (leia só os títulos dos cards, sem detalhar)
+7. **Slide 58:** Interação (onde os projetos travam)
+8. **Slide 48:** 3º card de “Explorar e preparar”
+9. **Slide 62:** 3º card de “Como aproveitar os próximos 3 dias”
 
 > **Plano B para atraso da diretoria:** se os 20 minutos virarem 45, você perde 25 min.
-> Corte os itens 1 a 4 da lista acima (≈ 8 min), reduza o Q&A para 3 min (≈ 3 min) e
-> acelere o bloco de carreiras lendo só a tabela do slide 32 sem detalhar os slides
-> 33 a 35 (≈ 8 min). Isso recupera 19 min. Os 6 restantes: encurte a recepção e o
+> Corte os itens 1 a 5 da lista acima (≈ 10 min), reduza o Q&A para 3 min (≈ 3 min) e
+> acelere o bloco de carreiras lendo só a tabela do slide 33 sem detalhar os slides
+> 34 a 36 (≈ 8 min). Isso recupera 21 min. Os 4 restantes: encurte a recepção e o
 > intervalo (10 min em vez de 15).
 
 ---
@@ -147,5 +148,5 @@ Ao final dos 150 minutos, cada participante deve conseguir:
 | Chat vira caos, ninguém acompanha | **Alta** | Moderador dedicado desde o minuto zero |
 | Queda de internet de um apresentador | Média | O outro assume; deck compartilhado com os dois previamente |
 | Sala cheia mas silenciosa | **Alta** | É normal em 190 pessoas. Não force resposta por áudio; use chat e enquete |
-| Alguém pergunta sobre vagas ou salário | **Alta** | Respostas prontas nas notas do slide 62 |
+| Alguém pergunta sobre vagas ou salário | **Alta** | Respostas prontas nas notas do slide 63 |
 | Estouro para depois das 22h | Média | O Q&A é o amortecedor. Encerre 22h00 sempre |

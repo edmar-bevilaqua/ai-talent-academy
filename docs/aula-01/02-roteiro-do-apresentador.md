@@ -224,8 +224,8 @@ Este bloco resolve a maior ansiedade da sala. Vá com calma.
 Primeira coisa: não existe uma prova final. A avaliação é contínua. A gente vai
 acompanhando o que vocês entregam ao longo das semanas.
 
-Segunda coisa, e essa é a mais importante: o que a gente avalia não é se você acertou
-a resposta. É COMO você pensa. Como você estrutura o problema, como você aprende com
+Segunda coisa, e essa é a mais importante: o que a gente avalia é COMO você pensa,
+não se você acertou a resposta. Como você estrutura o problema, como você aprende com
 o feedback, como você prioriza quando o tempo é curto e como você comunica o que fez.
 
 Na semana 4 tem o Mini-Desafio, que é a primeira entrega avaliada. E aí vem uma coisa
@@ -268,13 +268,14 @@ AÇÃO DO MODERADOR: postar o convite do Discord no chat exatamente neste slide.
 ROTEIRO DE FALA
 
 Bloco central da sua parte. Estrutura em 4 movimentos:
-  1) Por que agora (contexto e hype)          ~10 min
-  2) O mapa das siglas e como isso funciona   ~15 min
-  3) O que a IA NÃO faz                       ~8 min
-  4) Carreiras e papéis                       ~12 min
+  1) Por que agora (contexto e hype)          ~9 min
+  2) O mapa das siglas e como isso funciona   ~14 min
+  3) O que a IA NÃO faz e os 3 casos reais    ~11 min
+  4) Carreiras e papéis                       ~11 min
 
 Controle de tempo: às 20h05 você PRECISA estar entrando em "O que a IA não faz".
-Se estiver atrasado, corte "hype x realidade" e "mitos sobre entrar na área".
+Se estiver atrasado, corte nesta ordem: "onde estamos na curva", o segundo caso de viés
+(Amazon), "três mitos" e a interação.
 ```
 
 ## Slide 13 · VAMOS COMEÇAR POR UMA PERGUNTA
@@ -344,7 +345,7 @@ A caixa maior é INTELIGÊNCIA ARTIFICIAL. É o guarda-chuva: qualquer sistema q
 uma tarefa que a gente associa à inteligência humana. Um sistema de regras "se o cliente
 tem mais de 3 atrasos, marque como risco" já é IA num sentido amplo.
 
-Dentro dela tem MACHINE LEARNING. E aqui muda uma coisa fundamental: em vez de alguém
+Dentro dela tem MACHINE LEARNING. E aqui a lógica se inverte: em vez de alguém
 escrever a regra, o sistema DESCOBRE a regra sozinho, olhando exemplos. Você não diz o
 que é fraude. Você mostra 100 mil transações, marca quais foram fraude, e o modelo
 aprende o padrão.
@@ -621,8 +622,8 @@ suporte.
 
 E o sexto são agentes: faça isso por mim, do começo ao fim.
 
-E aqui vai um dos conselhos mais valiosos que eu posso dar para vocês em toda a
-carreira: a pergunta certa NUNCA é "como eu uso IA aqui?". A pergunta certa é "qual
+E aqui vai um conselho que eu queria ter recebido no início da minha
+carreira: nunca pergunte "como eu uso IA aqui?". Pergunte "qual
 degrau desta escada esse problema pede?". Um monte de gente resolve com IA generativa
 o que uma tabela dinâmica resolveria melhor, mais barato e mais confiável."
 ```
@@ -681,37 +682,101 @@ ROTEIRO DE FALA
 
 Conte como história. Baixe o ritmo. Este é o slide que a sala vai lembrar semana que vem.
 
-"Deixa eu contar um caso real que virou referência mundial.
+"Deixa eu contar um caso brasileiro, de julho de 2025.
 
-Nova York, 2023. Dois advogados estão preparando um processo e usam o ChatGPT para
-pesquisar jurisprudência. O modelo devolve seis decisões judiciais anteriores, com nome
-das partes, número do processo, citação, tudo formatado direitinho.
+Um advogado em Londrina está tocando uma ação sobre restabelecimento de benefício por
+incapacidade do INSS. Coisa do dia a dia da Justiça Federal. E ele usa IA para redigir as
+petições.
 
-Eles protocolam a petição com aquilo. Aí a parte contrária vai procurar as decisões...
-e nenhuma delas existe. Todas as seis foram inventadas pelo modelo.
+Aí vem a parte impressionante. O que a IA produziu não foi só jurisprudência inventada.
+Ela citou artigos da Lei do Mandado de Segurança que não existem. Citou legislação
+processual fictícia. E citou números de processo que não constam em base nenhuma de
+tribunal do país.
 
-O juiz descobre e aplica sanção aos advogados.
+O juiz federal foi conferir, não achou nada, e escreveu na decisão que as peças
+apresentavam referências doutrinárias, legais e jurisprudenciais inexistentes.
+Caracterizou litigância de má-fé e ato atentatório à dignidade da Justiça. Multa de vinte
+salários mínimos, e ofício para a OAB do Paraná.
 
-Agora, a lição aqui não é "não use IA". Eles usariam de novo se tivessem feito uma coisa
-só: conferir. A lição é que IA generativa NÃO é fonte. Ela é ponto de partida. E ponto de
-partida exige verificação.
+E olha, isso não é uma peculiaridade brasileira: em 2023 aconteceu exatamente a mesma
+coisa em Nova York, com dois advogados que citaram seis decisões judiciais inventadas.
 
-Isso tem nome: chama alucinação. E é importante vocês entenderem que isso é comportamento
-ESPERADO do funcionamento dele, não um bug raro que vão consertar semana que vem."
+Agora, a lição aqui não é "não use IA". Esse advogado usaria de novo se tivesse feito uma
+coisa só: conferir. A lição é que IA generativa NÃO é fonte. Lembram do que eu falei há
+pouco? Ela não consulta um banco de respostas, ela COMPÕE a sequência mais provável. E
+"número de processo plausível" é fácil de compor.
+
+Isso tem nome: chama alucinação. E é comportamento ESPERADO do funcionamento dele, não um
+bug raro que vão consertar semana que vem."
 
 ──────────────────────────────────────────────────────────────
 LEMBRETES
-Caso: Mata v. Avianca, Southern District of New York, 2023. Amplamente noticiado.
+Fonte: 2ª Vara Federal de Londrina (PR), decisão de 1º de julho de 2025, juiz federal
+substituto Igor de Lazari Barbosa Carneiro. Amplamente noticiado.
+Caso dos EUA citado de passagem: Mata v. Avianca, Nova York, 2023.
+Se alguém no chat pedir a fonte, prometa postar o link no Discord.
 ```
 
 ## Slide 29 · CASO REAL · VIÉS
 
 ```
-⏱ 2 min  |  ESSENCIAL  |  Apresenta: Edmar
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
-"Segundo caso, e esse é ainda mais desconfortável.
+Mude o tom: mais sério, mais devagar. Conte primeiro a história da pessoa, depois o dado.
+Enquadramento TÉCNICO, não político: base de treino não representativa gera taxa de erro
+diferente por grupo. Não editorialize, o fato sustenta sozinho.
+
+"Agora um caso brasileiro, de abril de 2024.
+
+Final do campeonato sergipano, Arena Batistão, em Aracaju. Um rapaz de 23 anos, personal
+trainer, está assistindo ao jogo. O sistema de reconhecimento facial da polícia aponta
+ele como um foragido da Justiça. Ele é algemado e retirado do estádio na frente de
+milhares de pessoas.
+
+Ele não tinha cometido crime nenhum. Era erro do sistema. Depois da repercussão, o estado
+suspendeu o uso do reconhecimento facial.
+
+E aqui vem a parte que interessa para a gente tecnicamente. Isso não foi um azar isolado.
+Em maio de 2025 saiu um estudo da Defensoria Pública da União junto com o CESeC, que
+mapeou 24 casos de falha entre 2019 e abril de 2025. A conclusão foi que MAIS DA METADE
+das abordagens policiais motivadas por reconhecimento facial resultaram em identificação
+equivocada.
+
+E o erro não é distribuído por igual. A taxa é muito maior para pessoas negras e
+indígenas. Por quê? Não porque alguém escreveu uma regra racista no código. Porque a base
+de imagens que treinou esses modelos não representava essas pessoas na mesma proporção. O
+modelo aprendeu a distinguir bem os rostos que ele viu muito, e mal os que ele viu pouco.
+
+Lembra do que eu falei lá atrás? A IA não é neutra. Ela aprende com os dados do mundo, e
+se os dados forem incompletos, ela vai errar de forma sistemática, e com aparência de
+objetividade. Que é o pior tipo de erro, porque é o mais difícil de contestar."
+
+──────────────────────────────────────────────────────────────
+LEMBRETES
+Fontes: caso de Aracaju, abril de 2024, amplamente noticiado. Estudo da Defensoria Pública
+da União com o Centro de Estudos de Segurança e Cidadania (CESeC), divulgado em 7 de maio
+de 2025, com pesquisa de campo entre julho e dezembro de 2024.
+O número de "10 a 100 vezes maior" para pessoas negras, indígenas e asiáticas vem da
+pesquisa internacional citada nesse mesmo relatório. Use só se perguntarem, e atribua.
+NÃO transforme em discussão política. O enquadramento é técnico: dado de treino
+não representativo gera taxa de erro desigual.
+```
+
+## Slide 30 · CASO REAL · VIÉS · 2
+
+```
+⏱ 2 min  |  DESCARTÁVEL: é o 1º corte deste trecho  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+Este slide existe para mostrar que o mecanismo do slide anterior não é exclusivo de
+reconhecimento facial. Se o bloco estiver atrasado, corte este e siga direto para as
+quatro perguntas de uso responsável.
+
+"E não pensem que isso é um problema só de reconhecimento facial. É o mesmo mecanismo em
+qualquer domínio.
 
 A Amazon construiu uma IA para triar currículos. Ideia ótima: acelerar a seleção.
 
@@ -723,21 +788,23 @@ aprendeu isso como se fosse sinal de sucesso. Ele começou a penalizar currícul
 tinham marcas femininas.
 
 Ninguém escreveu uma regra dizendo "rejeite mulheres". Ninguém. O modelo aprendeu a
-discriminar sozinho, olhando o passado.
+discriminar sozinho, olhando o passado. O projeto foi descontinuado em 2018.
 
-O projeto foi descontinuado em 2018.
+E eu vou ser honesto com vocês sobre por que eu escolhi justamente este caso: porque vocês
+estão dentro de um processo seletivo agora. Se a gente fosse automatizar essa seleção com
+um modelo treinado no histórico de quem já foi contratado nessa área, a gente ia repetir o
+passado dessa área. Isso é uma coisa que quem trabalha com dados precisa ter na cabeça
+desde o primeiro dia.
 
 E é exatamente por isso que neste curso ética não vai ser uma aula separada no final,
-daquelas que todo mundo pula. Vai ser uma pergunta que a gente faz em toda etapa: de onde
-veio esse dado? Quem ele representa? Quem ele deixa de fora? Quem é prejudicado se o
-modelo errar?"
+daquelas que todo mundo pula. Vai ser uma pergunta que a gente faz em toda etapa."
 
 ──────────────────────────────────────────────────────────────
 LEMBRETES
 Amazon, projeto descontinuado em 2018. Reportado pela Reuters. Fato público e documentado.
 ```
 
-## Slide 30 · USO RESPONSÁVEL
+## Slide 31 · USO RESPONSÁVEL
 
 ```
 ⏱ 2 min  |  ESSENCIAL (mas passe rápido)  |  Apresenta: Edmar
@@ -756,7 +823,7 @@ Se você fizer essas quatro perguntas em todo projeto, você já está à frente
 gente que está no mercado há anos."
 ```
 
-## Slide 31 · E quem faz isso acontecer?
+## Slide 32 · E quem faz isso acontecer?
 
 ```
 ⏱ 20 s  |  ESSENCIAL  |  Apresenta: Edmar
@@ -772,7 +839,7 @@ E eu quero que, nos próximos 12 minutos, vocês fiquem se perguntando: com qual
 eu me pareço mais?"
 ```
 
-## Slide 32 · O MAPA
+## Slide 33 · O MAPA
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -795,7 +862,7 @@ dessas perguntas te deu vontade de responder? Segura essa sensação, porque nos
 slides eu vou destrinchar cada um."
 ```
 
-## Slide 33 · PAPEL A PAPEL · 1
+## Slide 34 · PAPEL A PAPEL · 1
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -819,7 +886,7 @@ GOVERNANÇA é quem garante que o dado é confiável, seguro e legal de usar. Se
 auditoria, de jurídico, de processos, esse caminho conversa demais com o seu repertório."
 ```
 
-## Slide 34 · PAPEL A PAPEL · 2
+## Slide 35 · PAPEL A PAPEL · 2
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -843,7 +910,7 @@ dos projetos de IA morre. Tem muito modelo bom que nunca virou produto por falta
 que sabe fazer essa ponte."
 ```
 
-## Slide 35 · PAPEL A PAPEL · 3
+## Slide 36 · PAPEL A PAPEL · 3
 
 ```
 ⏱ 2 min  |  ESSENCIAL, bom momento de energia  |  Apresenta: Edmar
@@ -869,7 +936,7 @@ agora NÃO está atrasado. Não existe quase ninguém no mundo com cinco anos de
 nisso, porque isso não tem cinco anos de existência."
 ```
 
-## Slide 36 · TRÊS MITOS
+## Slide 37 · TRÊS MITOS
 
 ```
 ⏱ 2 min  |  DESCARTÁVEL, 1º item a cortar  |  Apresenta: Edmar
@@ -894,7 +961,7 @@ E o último: "preciso decidir sozinho". Não. É exatamente para isso que existe
 próximas sete semanas."
 ```
 
-## Slide 37 · INTERAÇÃO
+## Slide 38 · INTERAÇÃO
 
 ```
 ⏱ 2 min  |  DESCARTÁVEL  |  Apresenta: Edmar
@@ -922,7 +989,7 @@ LEMBRETES
 Passe o bastão ANTES do intervalo, não depois. Isso dá motivo para a pessoa voltar.
 ```
 
-## Slide 38 · INTERVALO
+## Slide 39 · INTERVALO
 
 ```
 ⏱ 20h30 às 20h45 (15 min)  |  ESSENCIAL  |  Apresenta: os dois
@@ -940,7 +1007,7 @@ VOLTA: comece 20h45 mesmo com gente faltando. Pontualidade na aula 1 define a cu
 das outras 7 semanas.
 ```
 
-## Slide 39 · Ciclo de vida de soluções
+## Slide 40 · Ciclo de vida de soluções
 
 ```
 ⏱ 20h45 às 21h45 (60 min)  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -970,7 +1037,7 @@ ESTRUTURA DOS 60 MIN:
   Amarração com os papéis + interação         2 min
 ```
 
-## Slide 40 · VAMOS COMEÇAR PELO DESCONFORTÁVEL
+## Slide 41 · VAMOS COMEÇAR PELO DESCONFORTÁVEL
 
 ```
 ⏱ 2 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -996,7 +1063,7 @@ LEMBRETES
 Se quiser citar número de mercado sobre % de projetos que não chegam à produção, CONFIRA a fonte atualizada antes da aula. Sem fonte, mantenha a afirmação qualitativa como está.
 ```
 
-## Slide 41 · O MAPA
+## Slide 42 · O MAPA
 
 ```
 ⏱ 4 min  |  ESSENCIAL, slide-âncora do bloco  |  Apresenta: Felipe André Bach Alves
@@ -1025,7 +1092,7 @@ errada, e volta para a 1. Isso é normal, isso é o trabalho.
 Guardem este slide. É o esqueleto de tudo que vocês vão fazer nas próximas sete semanas."
 ```
 
-## Slide 42 · FASE 1
+## Slide 43 · FASE 1
 
 ```
 ⏱ 4 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1054,7 +1121,7 @@ E sexta: qual é o menor resultado que já seria útil? Porque quase sempre dá 
 alguma coisa em duas semanas em vez de sumir por três meses."
 ```
 
-## Slide 43 · FASE 1 · A TRADUÇÃO
+## Slide 44 · FASE 1 · A TRADUÇÃO
 
 ```
 ⏱ 4 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1074,15 +1141,15 @@ de compra distinto?
 "Quero usar IA no atendimento", essa é a pior de todas, porque já começa pela solução,
 vira: dá para classificar automaticamente o motivo dos chamados de suporte?
 
-Essa tradução é uma das habilidades mais valiosas da nossa área. E é uma das menos
-ensinadas. Vocês vão treinar isso na quinta-feira."
+Poucos cursos ensinam essa tradução, e é aqui que está a maior parte do trabalho de
+verdade. Vocês vão treinar isso na quinta-feira."
 
 ──────────────────────────────────────────────────────────────
 LEMBRETES
 Ponte com a quinta: o Canvas do Problema é exatamente a ferramenta que estrutura essa tradução.
 ```
 
-## Slide 44 · FASE 1 · FECHAMENTO
+## Slide 45 · FASE 1 · FECHAMENTO
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1106,7 +1173,7 @@ Regra prática que eu quero deixar com vocês: se você não consegue escrever e
 frases, ainda NÃO é hora de abrir o dado."
 ```
 
-## Slide 45 · FASE 2
+## Slide 46 · FASE 2
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1115,7 +1182,7 @@ ROTEIRO DE FALA
 
 "Fase 2: onde estão os dados?
 
-Sistemas internos: ERP, CRM, sistema de vendas. É a fonte mais comum e a mais valiosa,
+Sistemas internos: ERP, CRM, sistema de vendas. É a fonte mais comum de todas,
 e quase sempre precisa de tratamento pesado.
 
 Logs e eventos: clique, acesso, uso do produto, sensor. Volume gigante, muito ricos, e
@@ -1137,7 +1204,7 @@ final, é pré-requisito. Projeto que ignora isso morre depois de pronto, que é
 hora de morrer."
 ```
 
-## Slide 46 · FASE 2 · REALIDADE
+## Slide 47 · FASE 2 · REALIDADE
 
 ```
 ⏱ 4 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1170,7 +1237,7 @@ do tempo de um projeto. Quando isso acontecer com vocês, não achem que estão 
 errado. Isso É o trabalho."
 ```
 
-## Slide 47 · FASES 3 E 4
+## Slide 48 · FASES 3 E 4
 
 ```
 ⏱ 4 min  |  ESSENCIAL (o 3º card é DESCARTÁVEL se atrasado)  |  Apresenta: Felipe André Bach Alves
@@ -1197,7 +1264,7 @@ variável boa é quem CONHECE O NEGÓCIO. É por isso que o repertório de você
 qualquer área que vocês venham, vale tanto aqui."
 ```
 
-## Slide 48 · FASE 5
+## Slide 49 · FASE 5
 
 ```
 ⏱ 4 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1225,7 +1292,7 @@ A regra de ouro: comece sempre pela solução mais simples que resolve o problem
 Complexidade se conquista, não se assume."
 ```
 
-## Slide 49 · A REGRA DO BASELINE
+## Slide 50 · A REGRA DO BASELINE
 
 ```
 ⏱ 2 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1248,7 +1315,7 @@ O baseline faz duas coisas: dá uma régua honesta, e te protege de entregar com
 que não gera valor."
 ```
 
-## Slide 50 · FASE 6
+## Slide 51 · FASE 6
 
 ```
 ⏱ 4 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1273,7 +1340,7 @@ gastar três semanas para piorar.
 A pergunta nunca é "o modelo é bom?". É "o modelo é melhor do que a alternativa?"."
 ```
 
-## Slide 51 · FASE 6 · A ARMADILHA DAS MÉTRICAS
+## Slide 52 · FASE 6 · A ARMADILHA DAS MÉTRICAS
 
 ```
 ⏱ 4 min  |  ESSENCIAL, melhor exemplo do bloco  |  Apresenta: Felipe André Bach Alves
@@ -1309,7 +1376,7 @@ LEMBRETES
 Se o tempo estiver curto, ESTE slide fica e o de overfitting sai. É o mais memorável.
 ```
 
-## Slide 52 · FASE 6 · GENAI É DIFERENTE
+## Slide 53 · FASE 6 · GENAI É DIFERENTE
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1333,7 +1400,7 @@ Consequência prática: num projeto de GenAI, você precisa definir LOGO NO COME
 uma boa resposta. Senão você não tem como saber se melhorou."
 ```
 
-## Slide 53 · FASE 7
+## Slide 54 · FASE 7
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1359,7 +1426,7 @@ Frase para levar: modelo que fica no notebook não gera valor. Nem para a empres
 para a sua carreira."
 ```
 
-## Slide 54 · FASE 8
+## Slide 55 · FASE 8
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1385,10 +1452,10 @@ E a última linha é organizacional, não técnica: alguém precisa ser DONO dis
 lançamento. Projeto sem dono vira ruína silenciosa: continua rodando, continua errando,
 e ninguém percebe.
 
-Solução de dados não é obra pronta. É jardim: precisa de manutenção."
+Solução de dados é jardim, não obra pronta: precisa de manutenção."
 ```
 
-## Slide 55 · PONTA A PONTA
+## Slide 56 · PONTA A PONTA
 
 ```
 ⏱ 6 min  |  ESSENCIAL, fechamento do bloco  |  Apresenta: Felipe André Bach Alves
@@ -1435,7 +1502,7 @@ gente. É exatamente por isso que a gente começou o curso por aqui, e não ensi
 código."
 ```
 
-## Slide 56 · AMARRANDO
+## Slide 57 · AMARRANDO
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1459,7 +1526,7 @@ funcionarem de verdade e não quebrarem, fases 7 e 8.
 Nenhuma dessas portas é mais nobre que a outra. E ninguém faz tudo sozinho."
 ```
 
-## Slide 57 · INTERAÇÃO
+## Slide 58 · INTERAÇÃO
 
 ```
 ⏱ 2 min  |  DESCARTÁVEL  |  Apresenta: Felipe André Bach Alves
@@ -1480,7 +1547,7 @@ Repara: as duas pontas. O começo e o fim. E nenhuma das duas é a parte de trei
 que é onde quase todo mundo acha que está a dificuldade."
 ```
 
-## Slide 58 · Encerramento
+## Slide 59 · Encerramento
 
 ```
 ⏱ 21h45 às 22h00 (15 min)  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1498,7 +1565,7 @@ Se a aula estiver atrasada, o Q&A encolhe primeiro, mas NUNCA passe das 22h00.
 Terminar no horário na aula 1 é uma promessa implícita para as outras 7 semanas.
 ```
 
-## Slide 59 · RECAPITULANDO
+## Slide 60 · RECAPITULANDO
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1529,7 +1596,7 @@ perfil. Técnico ou não, analítico ou de negócio. Todas são válidas, e a ge
 todas elas nas próximas sete semanas."
 ```
 
-## Slide 60 · PRÓXIMO ENCONTRO
+## Slide 61 · PRÓXIMO ENCONTRO
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
@@ -1553,7 +1620,7 @@ E por favor: entrem no Discord ainda esta noite. O material da quinta vai ser po
 antes da aula."
 ```
 
-## Slide 61 · ATÉ QUINTA
+## Slide 62 · ATÉ QUINTA
 
 ```
 ⏱ 2 min  |  ESSENCIAL (o 3º card é DESCARTÁVEL)  |  Apresenta: Felipe André Bach Alves
@@ -1574,7 +1641,7 @@ vocês não conheciam. E descansem também: são 8 semanas, isso é maratona, n�
 curto."
 ```
 
-## Slide 62 · AGORA É COM VOCÊS
+## Slide 63 · AGORA É COM VOCÊS
 
 ```
 ⏱ 6 min (elástico)  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves + Edmar
@@ -1620,7 +1687,7 @@ PERGUNTAS QUE VÃO APARECER, respostas prontas:
   Não. Nas aulas práticas usamos APIs gratuitas para modelos de LLM.
 ```
 
-## Slide 63 · Obrigado!
+## Slide 64 · Obrigado!
 
 ```
 ⏱ 1 min  |  ESSENCIAL  |  Apresenta: Felipe André Bach Alves
