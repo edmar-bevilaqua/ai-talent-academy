@@ -113,9 +113,9 @@ quebra a geração se alguma cair abaixo disso.
 **As duas exceções documentadas**, ambas confirmadas na própria versão final aprovada pelo
 usuário:
 
-1. **`S_FOOT` (13pt), o rodapé.** `whitecube.com.br` e o número do slide são mobília da
-   página, não conteúdo de leitura. Na versão final o usuário manteve o rodapé em 13pt em
-   todos os 64 slides. Não force para 17.
+1. **`S_FOOT` (13pt), o rodapé.** `whitecube.com.br` é mobília da página, não conteúdo de
+   leitura. Na versão final o usuário manteve o rodapé em 13pt em todos os 64 slides.
+   Não force para 17.
 2. **Os rótulos internos dos três anéis externos do `sl_nested`** (o diagrama de círculos
    concêntricos IA → ML → Deep Learning → GenAI). O espaço físico dentro dos anéis mais
    finos não comporta 17pt sem quebrar o desenho ou estourar o anel seguinte. Na versão
@@ -182,10 +182,43 @@ jardim, não obra pronta: precisa de manutenção", preservando a metáfora mas 
 esqueleto de frase repetido.
 
 **Como aplicar ao escrever conteúdo novo:** antes de considerar um bloco de texto pronto,
-releia contra esta tabela. Não existe assert de código para isso (linguagem natural não dá
-pra regex com segurança sem gerar falsos positivos), então é revisão manual mesmo. Um
-bullet com "cabeça em negrito + explicação" (o padrão `rich_block` usado no deck inteiro)
-não é o vício 6: é a estrutura de bullet do projeto, consistente e repetida de propósito.
+releia contra esta tabela. Um bullet com "cabeça em negrito + explicação" (o padrão
+`rich_block` usado no deck inteiro) não conta como vício 6: é a estrutura de bullet do
+projeto, consistente e repetida de propósito.
+
+#### ⚠️ Rode o auditor. Não confie na memória.
+
+```bash
+python scripts/auditar_vicios.py                          # varre o repositório inteiro
+python scripts/auditar_vicios.py scripts/gerar_slides_aulaNN.py   # só um arquivo
+```
+
+O relatório sai em `C:/tmp/auditoria-vicios.txt`, porque o console do Windows quebra com
+acento.
+
+**Isto existe por causa de uma falha real.** Ao produzir a Aula 2, este manual já estava
+escrito, com a regra 3.5 completa, e mesmo assim o conteúdo saiu com 12 ocorrências do
+vício 6, 4 perguntas retóricas em série, 2 escadinhas e títulos-manchete com dois-pontos.
+O usuário precisou apontar. Ler a regra antes de escrever não bastou: a checagem depois de
+escrever é que pega.
+
+**O auditor tem falso positivo de propósito**, e a decisão continua sendo humana. Ele não
+distingue sozinho:
+
+| O auditor aponta | Mas é legítimo quando |
+|---|---|
+| `V3` título com dois-pontos | é rótulo estrutural (`FASE 1: Tradução`, `FORA DO ESCOPO: ...`), não manchete persuasiva |
+| `V4` maiúscula após dois-pontos | o que vem depois é nome próprio, fala, citação ou enumeração |
+| `V5` vocabulário genérico | `ESSENCIAL`/`DESCARTÁVEL` é marcação de corte, e `otimização` é o nome do degrau da escada |
+| qualquer um | está dentro de comentário de código, que nenhum participante lê |
+
+Quando bater dúvida sobre um apontamento, o teste é: **um leitor humano desconfiaria que
+uma máquina escreveu isto?** Se a resposta é não, ignore o apontamento.
+
+**Nota sobre o roteiro falado:** os vícios 2 (pergunta retórica) e 7 (escadinha) são
+tolerados com mais folga nas notas do apresentador do que nos slides, porque o roteiro é
+falado em voz alta e repetição funciona melhor na fala. Mas "Parece exagero? Não é." é
+vício mesmo falado. O critério continua sendo o mesmo: uma vez no bloco, nunca como padrão.
 
 ### 3.6 A validação é automática (regras 3.1 a 3.4)
 
@@ -266,7 +299,7 @@ Todas, exceto `S_FOOT`, são ≥ `S_MIN` (17), por causa da regra 3.2. Isso é v
 | `S_TIMELINE` | 17 | Texto de cada marco da linha do tempo |
 | `S_PIPELINE_B` | 17 | Descrição de cada card do pipeline |
 | `S_NESTED_LEGEND` | 17 | Texto da legenda ao lado do diagrama de círculos |
-| `S_FOOT` | 13 | Rodapé. **Única exceção** ao piso de 17pt (regra 3.2) |
+| `S_FOOT` | 13 | Rodapé (`whitecube.com.br`). **Única exceção** ao piso de 17pt (regra 3.2) |
 
 ### 4.5 Assinatura de cabeçalho
 
@@ -276,9 +309,12 @@ negrito) acima do título (cinza, regular).
 
 ### 4.6 Rodapé
 
-`whitecube.com.br` à esquerda, número do slide à direita, ambos em `S_FOOT`. O contador é
-global (`_n["i"]`), incrementado por `footer()`, então **todo slide precisa chamar
-`footer()` exatamente uma vez** ou a numeração sai errada.
+`whitecube.com.br` à esquerda, em `S_FOOT`. **Sem número de slide:** a numeração é feita
+no Canva, que renumera sozinho quando um slide entra ou sai. O contador global (`_n["i"]`)
+continua existindo, mas só alimenta o relatório final da geração.
+
+Ainda assim, **todo slide precisa chamar `footer()` exatamente uma vez**, para o rodapé
+aparecer e a contagem do relatório bater com o deck.
 
 ### 4.7 Disposição de objetos: lições da versão final
 
@@ -503,7 +539,7 @@ Problemas reais que já custaram retrabalho. Confira todos ao criar uma aula nov
 | **Diagrama estoura o slide** | Círculos concêntricos passam do rodapé | Dimensione a partir do espaço disponível (`BOTTOM - y`), nunca com valores absolutos |
 | **Rótulo na borda da forma** | Texto encosta na linha do círculo | Deslocamento mínimo de 0,3 pol para dentro |
 | **Contagem no título não bate** | Título diz "cinco" e há seis cards | Confira número escrito por extenso contra `len(cards)` |
-| **Numeração de slide errada** | Números pulam ou repetem | Todo slide chama `footer()` uma vez, e só uma |
+| **Rodapé faltando num slide** | Slide sem `whitecube.com.br` no canto | Todo slide chama `footer()` uma vez, e só uma |
 | **Roboto não instalada** | Preview do PowerPoint mostra outra fonte | O `.pptx` está correto. Instale Roboto (fonts.google.com) para conferir localmente. O Canva já tem |
 | **Console quebra com acento** | `UnicodeEncodeError: cp1252` | Grave em arquivo com `encoding="utf-8"` e leia o arquivo |
 | **Linha de tabela com duas linhas** | Texto vaza da faixa alternada | Encurte a célula até caber em uma linha, ou aumente a largura da coluna. Nunca reduza `S_TABLE_C` abaixo de `S_MIN` |
@@ -581,13 +617,18 @@ procedimento da seção 2: diff programático, incorporar no script, regerar.
    fala é parte do trabalho, não um extra.
 5. **Rode o gerador.** Se ele reclamar de estilo, corrija o conteúdo. Não relaxe a
    validação.
-6. **Exporte para PNG e olhe.** Corrija overflow e slides com espaço morto.
-7. **Rode o exportador de roteiro.**
-8. **Escreva os documentos de apoio** no padrão de `docs/aula-01/`: plano com cronômetro e
+6. **Rode `python scripts/auditar_vicios.py`** e leia o relatório inteiro, apontamento por
+   apontamento. Este passo não é opcional, e já foi esquecido uma vez com o manual aberto
+   na mesa. Ver a regra 3.5.
+7. **Exporte para PNG e olhe.** Corrija overflow e slides com espaço morto.
+8. **Rode o exportador de roteiro.**
+9. **Escreva os documentos de apoio** no padrão de `docs/aula-01/`: plano com cronômetro e
    mapa de cortes, material do participante, plano de interação, e-mails.
-9. **Confira a numeração de slides** citada nos documentos contra o deck real. Ela muda
-   sempre que um slide entra ou sai, e é a fonte mais comum de erro nesses arquivos.
-10. **Liste as pendências** de preenchimento no README da aula.
+10. **Rode o auditor de novo**, agora incluindo os documentos de apoio que você acabou de
+    escrever. Eles saem do mesmo teclado e carregam os mesmos vícios.
+11. **Confira a numeração de slides** citada nos documentos contra o deck real. Ela muda
+    sempre que um slide entra ou sai, e é a fonte mais comum de erro nesses arquivos.
+12. **Liste as pendências** de preenchimento no README da aula.
 
 ### Padrão de arquitetura de uma aula
 
