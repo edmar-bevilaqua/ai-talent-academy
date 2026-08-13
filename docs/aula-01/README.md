@@ -49,7 +49,7 @@ extraídos de `Apresentação_Template_WhiteCube.pptx`, guardados em [`assets/wh
 | Texto | `#404148` (corpo) e `#767880` (secundário) |
 | Fundo claro | `#EAEBEB` |
 | Margem lateral | 1,059 pol (mesma do template) |
-| Rodapé | `whitecube.com.br` à esquerda, número do slide à direita |
+| Rodapé | `whitecube.com.br` à esquerda. Sem número de slide, o Canva numera |
 
 **Fundos usados:** capa com cubos (`image1`), cinza claro com marca d'água (`image3`),
 branco com régua azul (`image5`) e azul institucional para seções e declarações (`image6`).
