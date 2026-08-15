@@ -203,11 +203,12 @@ def chrome(slide, kicker, title, subtitle=None, dark=False):
 
 
 def footer(slide, dark=False):
+    """Rodape do template. SEM numero de slide: a numeracao e feita no Canva, que
+    renumera sozinho quando um slide entra ou sai. O contador `_n` continua existindo
+    so para o relatorio final da geracao."""
     _n["i"] += 1
     c = NAVY_TXT_SOFT if dark else MUTED
     block(slide, ML, FOOT_Y, Inches(6), Inches(0.4), "whitecube.com.br", S_FOOT, c, space=0)
-    block(slide, SW - ML - Inches(1.5), FOOT_Y, Inches(1.5), Inches(0.4), str(_n["i"]),
-          S_FOOT, c, align=PP_ALIGN.RIGHT, space=0)
 
 
 def notes(slide, tempo, marcacao, quem, roteiro, lembrete=None):
