@@ -222,3 +222,5 @@ assets/
 
 !assets/whitecube/
 !docs/Apresentação_Template_WhiteCube.pptx
+
+*.csv
