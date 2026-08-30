@@ -93,6 +93,44 @@ MOTIVOS_CONTESTACAO = [
     "Cobrança duplicada",
 ]
 
+# Nome de lojista: NÃO usa fake.company(), porque no locale pt_BR ele gera nome de
+# empresa registrada a partir de sobrenome (tipo "da Costa - EI", "Farias e Filhos"),
+# que soa a escritório de contabilidade, não a loja. Em vez disso, combina um prefixo
+# de marca fictícia com um sufixo coerente com a categoria do lojista.
+PREFIXOS_LOJISTA = [
+    "Vetor", "Aurora", "Bom Preço", "Ponto Certo", "Estrela", "Horizonte",
+    "Central", "União", "Popular", "Nacional", "Premium", "Express", "Real",
+    "Bela Vista", "Novo Tempo", "Sul", "Norte", "Litoral", "Serra", "Vale",
+    "Cidade", "Metropolitana", "Rio", "Praça", "Alameda",
+]
+SUFIXOS_CATEGORIA = {
+    "Alimentação": ["Sabor", "Gourmet", "Delícias", "Cozinha"],
+    "Eletrônicos": ["Eletrônicos", "Tech", "Digital", "Informática"],
+    "Vestuário": ["Moda", "Estilo", "Boutique", "Confecções"],
+    "Farmácia": ["Farmácia", "Saúde", "Bem-Estar"],
+    "Combustível": ["Combustíveis", "Auto Posto", "Posto"],
+    "Supermercado": ["Supermercado", "Mercado", "Hortifruti"],
+    "Joalheria": ["Joalheria", "Joias", "Bijuterias"],
+    "Livraria": ["Livraria", "Papelaria", "Livros"],
+    "Serviços": ["Serviços", "Assistência", "Soluções"],
+    "Educação": ["Educação", "Cursos", "Ensino"],
+    "Lazer": ["Lazer", "Entretenimento", "Diversão"],
+    "Transporte": ["Transportes", "Logística", "Mobilidade"],
+}
+
+# Cidades reais, não o fake.city() do Faker, que inventa nomes ficticios
+# (sobrenome virando cidade, tipo "Garcia" ou "da Cunha"). Inclui Curitiba e
+# São Paulo de propósito, para manter o gancho com o caso das Aulas 2 e 5.
+CIDADES = [
+    ("São Paulo", "SP"), ("Curitiba", "PR"), ("Rio de Janeiro", "RJ"),
+    ("Belo Horizonte", "MG"), ("Porto Alegre", "RS"), ("Salvador", "BA"),
+    ("Recife", "PE"), ("Fortaleza", "CE"), ("Brasília", "DF"),
+    ("Florianópolis", "SC"), ("Campinas", "SP"), ("Goiânia", "GO"),
+    ("Manaus", "AM"), ("Belém", "PA"), ("Vitória", "ES"),
+    ("Natal", "RN"), ("Joinville", "SC"), ("Londrina", "PR"),
+    ("Uberlândia", "MG"), ("Santos", "SP"),
+]
+
 
 # --------------------------------------------------------------------------
 # Geração das tabelas
@@ -103,12 +141,15 @@ def gerar_categorias():
 
 def gerar_lojistas(fake, n, categorias):
     lojistas = []
-    ids_categoria = [c[0] for c in categorias]
+    nome_categoria_por_id = {c[0]: c[1] for c in categorias}
+    ids_categoria = list(nome_categoria_por_id.keys())
     for i in range(1, n + 1):
-        nome = fake.company()
         id_categoria = random.choice(ids_categoria)
-        cidade = fake.city()
-        estado = fake.estado_sigla()
+        categoria = nome_categoria_por_id[id_categoria]
+        prefixo = random.choice(PREFIXOS_LOJISTA)
+        sufixo = random.choice(SUFIXOS_CATEGORIA[categoria])
+        nome = f"{prefixo} {sufixo}"
+        cidade, estado = random.choice(CIDADES)
         data_cadastro = fake.date_between(
             start_date=DATA_INICIO - timedelta(days=365), end_date=DATA_INICIO)
         lojistas.append((i, nome, id_categoria, cidade, estado, data_cadastro))
@@ -120,8 +161,7 @@ def gerar_clientes(fake, n):
     for i in range(1, n + 1):
         nome = fake.name()
         cpf = fake.cpf()
-        cidade = fake.city()
-        estado = fake.estado_sigla()
+        cidade, estado = random.choice(CIDADES)
         nascimento = fake.date_of_birth(minimum_age=18, maximum_age=75)
         cadastro = fake.date_between(
             start_date=DATA_INICIO - timedelta(days=800), end_date=DATA_FIM)
@@ -132,11 +172,13 @@ def gerar_clientes(fake, n):
     return clientes
 
 
-def gerar_cartoes(fake, clientes):
+def gerar_cartoes(fake, clientes, clientes_sem_cartao=frozenset()):
     cartoes = []
     id_cartao = 1
     for cliente in clientes:
         id_cliente, _, _, _, _, _, data_cadastro, *_ = cliente
+        if id_cliente in clientes_sem_cartao:
+            continue
         n_cartoes = random.choices([1, 2], weights=[70, 30])[0]
         for _ in range(n_cartoes):
             bandeira = random.choice(BANDEIRAS)
@@ -154,10 +196,10 @@ def gerar_cartoes(fake, clientes):
     return cartoes
 
 
-def gerar_transacoes(n, cartoes, lojistas):
+def gerar_transacoes(n, cartoes, lojistas, lojistas_sem_venda=frozenset()):
     transacoes = []
     ids_cartao = [c[0] for c in cartoes]
-    ids_lojista = [l[0] for l in lojistas]
+    ids_lojista = [l[0] for l in lojistas if l[0] not in lojistas_sem_venda]
     inicio_ts = datetime.combine(DATA_INICIO, datetime.min.time())
     fim_ts = datetime.combine(DATA_FIM, datetime.min.time())
     intervalo_segundos = int((fim_ts - inicio_ts).total_seconds())
@@ -174,6 +216,82 @@ def gerar_transacoes(n, cartoes, lojistas):
         transacoes.append((i, id_cartao, id_lojista, valor, data_hora, canal,
                             status, pais))
     return transacoes
+
+
+# Parâmetros da história de fraude plantada (--anomalias). Ver
+# docs/aula-08/dados/historia_anomalia.md para o roteiro de investigação completo.
+#
+# Uma quarta camada, "viagem impossível" (mesmo cartão em cidades distantes em
+# poucos minutos), foi tentada e descartada: com 1 milhão de transações
+# distribuídas de forma totalmente independente entre lojista e horário, pares
+# assim aparecem aos milhares por puro acaso, mesmo exigindo velocidade acima de
+# 1.000 km/h entre as duas cidades. Sem nenhuma coerência geográfica na base (um
+# cliente não tem "cidade de origem" que puxe a maioria das compras dele), não
+# existe um "normal" para a anomalia se destacar. Substituída por teste de
+# cartão, que não depende de estrutura nenhuma no resto da base.
+N_LOJISTAS_SUSPEITOS = 2
+TAXA_CONTESTACAO_SUSPEITA = 0.22
+FRACAO_HORARIO_SUSPEITO = 0.65
+N_CARTOES_TESTE = 15
+N_TRANSACOES_POR_TESTE = 6
+
+
+def injetar_anomalias(transacoes, lojistas):
+    """Planta um padrão de fraude descobrível via análise exploratória, em três
+    camadas: (1) um punhado de lojistas com taxa de contestação bem acima da
+    média, (2) concentração anômala de horário de madrugada nas transações
+    desses lojistas, (3) teste de cartão: rajadas de transações pequenas e
+    quase idênticas, em minutos, no mesmo lojista suspeito.
+    """
+    cidade_por_lojista = {l[0]: l[3] for l in lojistas}
+    ids_lojista = list(cidade_por_lojista.keys())
+    lojistas_suspeitos = random.sample(ids_lojista, N_LOJISTAS_SUSPEITOS)
+    suspeitos = frozenset(lojistas_suspeitos)
+
+    indices_suspeitos = [i for i, t in enumerate(transacoes) if t[2] in suspeitos]
+
+    # Camada 1: taxa de contestação bem acima da média geral (~2%).
+    n_contestar = int(len(indices_suspeitos) * TAXA_CONTESTACAO_SUSPEITA)
+    for idx in random.sample(indices_suspeitos, n_contestar):
+        t = list(transacoes[idx])
+        t[6] = "contestada"
+        transacoes[idx] = tuple(t)
+
+    # Camada 2: concentração de horário na madrugada, fora do padrão da base.
+    n_horario = int(len(indices_suspeitos) * FRACAO_HORARIO_SUSPEITO)
+    for idx in random.sample(indices_suspeitos, n_horario):
+        t = list(transacoes[idx])
+        nova_hora = t[4].replace(
+            hour=random.randint(1, 3), minute=random.randint(0, 59),
+            second=random.randint(0, 59))
+        t[4] = nova_hora
+        transacoes[idx] = tuple(t)
+
+    # Camada 3: teste de cartão. Antes de golpes maiores, é comum o fraudador
+    # rodar várias transações pequenas e parecidas, em sequência rápida, só para
+    # confirmar que o cartão ainda funciona. Aqui, alguns cartões que já
+    # passaram pelo lojista suspeito ganham uma rajada de 6 transações de R$1 a
+    # R$5, dentro de uma janela de 10 minutos, no mesmo lojista.
+    novas = []
+    proximo_id = transacoes[-1][0] + 1
+    ids_cartao_suspeitos = list({transacoes[i][1] for i in indices_suspeitos})
+    amostra_cartoes = random.sample(
+        ids_cartao_suspeitos, min(N_CARTOES_TESTE, len(ids_cartao_suspeitos)))
+    for id_cartao in amostra_cartoes:
+        id_lojista_teste = random.choice(lojistas_suspeitos)
+        inicio_rajada = random.choice([
+            transacoes[i][4] for i in indices_suspeitos
+            if transacoes[i][1] == id_cartao
+        ])
+        for _ in range(N_TRANSACOES_POR_TESTE):
+            valor_teste = round(random.uniform(1.0, 5.0), 2)
+            hora_teste = inicio_rajada + timedelta(minutes=random.randint(0, 10))
+            novas.append((proximo_id, id_cartao, id_lojista_teste, valor_teste,
+                           hora_teste, "online", "aprovada", "Brasil"))
+            proximo_id += 1
+
+    transacoes.extend(novas)
+    return transacoes, lojistas_suspeitos, len(novas)
 
 
 def gerar_contestacoes(transacoes):
@@ -425,7 +543,19 @@ def main():
                      help="ou defina a variável de ambiente FREESQL_DSN")
     ap.add_argument("--usuario", default=os.environ.get("FREESQL_USER"),
                      help="ou defina a variável de ambiente FREESQL_USER")
+    ap.add_argument("--saida", default="aula-06",
+                     help="pasta em docs/ onde gravar (docs/<saida>/dados). "
+                          "Padrão: aula-06. Use outro valor, como aula-08, para não "
+                          "sobrescrever um pacote já gerado.")
+    ap.add_argument("--anomalias", action="store_true",
+                     help="planta a história de fraude descobrível (ver "
+                          "docs/aula-08/dados/historia_anomalia.md). Desligado por "
+                          "padrão, para não afetar o pacote já calibrado da Aula 6.")
     args = ap.parse_args()
+
+    global OUT, CSV_DIR
+    OUT = ROOT / "docs" / args.saida / "dados"
+    CSV_DIR = OUT / "csv"
 
     random.seed(args.seed)
     fake = Faker("pt_BR")
@@ -434,8 +564,33 @@ def main():
     categorias = gerar_categorias()
     clientes = gerar_clientes(fake, args.clientes)
     lojistas = gerar_lojistas(fake, args.lojistas, categorias)
-    cartoes = gerar_cartoes(fake, clientes)
-    transacoes = gerar_transacoes(args.transacoes, cartoes, lojistas)
+
+    # Reserva de propósito alguns clientes sem cartão e lojistas sem venda, para o
+    # exercício de LEFT JOIN ter alguém de fora para achar. Sem isso, com volume
+    # grande, a chance de sobrar algum cliente ou lojista fora das transações é
+    # praticamente zero, e o exercício fica sem resposta interessante.
+    n_clientes_sem_cartao = max(10, args.clientes // 100)
+    n_lojistas_sem_venda = max(5, args.lojistas // 50)
+    clientes_sem_cartao = frozenset(
+        range(args.clientes - n_clientes_sem_cartao + 1, args.clientes + 1))
+    lojistas_sem_venda = frozenset(
+        range(args.lojistas - n_lojistas_sem_venda + 1, args.lojistas + 1))
+
+    cartoes = gerar_cartoes(fake, clientes, clientes_sem_cartao)
+    transacoes = gerar_transacoes(args.transacoes, cartoes, lojistas, lojistas_sem_venda)
+
+    lojistas_suspeitos = []
+    n_transacoes_teste = 0
+    if args.anomalias:
+        transacoes, lojistas_suspeitos, n_transacoes_teste = injetar_anomalias(
+            transacoes, lojistas)
+        # As transações plantadas foram só anexadas ao final da lista. Sem
+        # embaralhar, elas ficam agrupadas nas últimas linhas do CSV, e um
+        # .tail() ingênuo entrega a resposta da investigação de graça. Embaralha
+        # a ordem das linhas no arquivo, sem mudar nenhum dado: id_transacao,
+        # somas, contagens e todo o resto continuam exatamente os mesmos.
+        random.shuffle(transacoes)
+
     contestacoes = gerar_contestacoes(transacoes)
 
     OUT.mkdir(parents=True, exist_ok=True)
@@ -472,6 +627,13 @@ def main():
     print("cartoes:", len(cartoes))
     print("transacoes:", len(transacoes))
     print("contestacoes:", len(contestacoes))
+    print("clientes sem cartão (de propósito):", n_clientes_sem_cartao)
+    print("lojistas sem venda (de propósito):", n_lojistas_sem_venda)
+    if args.anomalias:
+        nome_por_lojista = {l[0]: l[1] for l in lojistas}
+        print("lojistas suspeitos (história plantada):",
+              [(lid, nome_por_lojista[lid]) for lid in lojistas_suspeitos])
+        print("transações de teste de cartão plantadas:", n_transacoes_teste)
 
     if args.carregar:
         if not args.dsn or not args.usuario:
