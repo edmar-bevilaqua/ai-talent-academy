@@ -89,7 +89,7 @@ pergunta a senha na hora, escondendo o que você digita.
 
 ## Passo 2: o que compartilhar com os alunos
 
-Só estes três itens, numa pasta do Google Drive com o acesso liberado para a turma:
+Estes itens, numa pasta do Google Drive com o acesso liberado para a turma:
 
 ```
 schema.sql
@@ -100,12 +100,13 @@ csv/cartoes.csv
 csv/transacoes.csv
 csv/contestacoes.csv
 carregar_dados_aluno.ipynb
+exercicios_aluno.sql
 ```
 
-**Não compartilhe** `scripts/gerar_dados_aula06.py` nem `carga_manual.sql`. O primeiro
-é a lógica de geração, que fica só com você. O segundo é um jeito manual de carregar as
-tabelas pequenas colando SQL num worksheet, útil só como plano B seu, não faz parte do
-fluxo do aluno.
+**Não compartilhe** `scripts/gerar_dados_aula06.py`, `carga_manual.sql`,
+`gabarito_respostas.sql` nem `gabarito_respostas.md`. Os dois primeiros são lógica de
+geração e um plano B de carga, que ficam só com você. Os dois últimos são as respostas
+prontas dos 18 exercícios: compartilhar qualquer um deles anula o exercício.
 
 ---
 
@@ -127,6 +128,12 @@ compartilhada. O notebook, célula por célula:
 
 Ao final, o aluno tem, na própria conta do FreeSQL, o mesmo banco de 6 tabelas e o
 mesmo volume de dados usado na aula, pronto para rodar as consultas.
+
+Depois disso, o aluno abre `exercicios_aluno.sql` no worksheet do FreeSQL e resolve as
+18 perguntas, escrevendo a consulta de cada uma logo abaixo do enunciado, que fica como
+comentário. `gabarito_respostas.sql` e `gabarito_respostas.md`, na mesma pasta, trazem
+as respostas prontas, testadas contra os dados reais, para você conferir rápido durante
+a mentoria ou usar de referência ao circular pelas salas.
 
 ---
 
@@ -150,6 +157,9 @@ as 54.794 linhas geradas com os parâmetros padrão, sem nenhum erro de convers�
 schema.sql                      DDL das 6 tabelas, com chave estrangeira
 carga_manual.sql                Plano B do instrutor: INSERT ALL das 4 tabelas pequenas
 carregar_dados_aluno.ipynb      O notebook que cada aluno roda no próprio Colab
+exercicios_aluno.sql            As 18 perguntas, para o aluno responder no worksheet
+gabarito_respostas.sql          Instrutor: as 18 respostas, prontas para rodar
+gabarito_respostas.md           Instrutor: as mesmas respostas, com explicação da técnica
 csv/categorias.csv
 csv/clientes.csv
 csv/lojistas.csv
