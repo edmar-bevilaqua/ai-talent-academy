@@ -236,10 +236,10 @@ def sl_cover():
     block(s, ML, Inches(2.85), Inches(14), Inches(1.5), "AI Talent Academy", 66, NAVY,
           bold=True, space=0, line=1.0)
     block(s, ML, Inches(4.55), Inches(14), Inches(0.9),
-          "Semana 1  ·  Primeiro laboratório do programa", 25, INK, space=0)
+          "Semana 3  ·  Análise de Dados com SQL", 25, INK, space=0)
     shape(s, ML, Inches(5.75), Inches(2.4), Pt(5), fill=RED)
     block(s, ML, Inches(8.15), Inches(13), Inches(1.0),
-          ["Aula 2  ·  Quinta-feira, 19h00 às 21h00  ·  Online",
+          ["Aula 5  ·  Segunda-feira, 19h00 às 22h05  ·  Online",
            "White Cube  ·  Bevilaqua Data Labs  ·  BPTECH"], S_MIN, INK, space=5)
     footer(s)
     return s
