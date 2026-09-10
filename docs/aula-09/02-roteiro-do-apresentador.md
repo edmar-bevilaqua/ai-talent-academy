@@ -122,13 +122,14 @@ quebrou, só repara quando quebra."
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
-"Seis blocos hoje, mais do que o normal, de propósito: engenharia de dados tem muita
+"Sete blocos hoje, mais do que o normal, de propósito: engenharia de dados tem muita
 coisa boa para conhecer, e preferimos trazer tudo e ajustar depois do que deixar
 faltar.
 
 De onde vêm os dados. Onde eles moram. ETL contra ELT, com uma briga histórica de
-verdade no meio. Qualidade de dados. Pipeline de produção, com Airflow e dbt. E
-fechamos amarrando tudo no caso de fraude em cartão que vocês já conhecem."
+verdade no meio. Qualidade de dados. Pipeline de produção, com Airflow e dbt.
+Processamento distribuído, com Spark e Databricks. E fechamos amarrando tudo no caso
+de fraude em cartão que vocês já conhecem."
 ```
 
 ## Slide 8 · De onde vêm os dados
@@ -314,17 +315,18 @@ quem analisa. Cada um faz o trabalho que o outro faz mal."
 ## Slide 18 · BÔNUS: DATA LAKEHOUSE
 
 ```
-⏱ 4 min  |  DESCARTÁVEL  |  Apresenta: Edmar
+⏱ 4 min  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
-"Um bônus rápido, para quem quiser o nome mais recente do mercado. Data Lakehouse é a
-ideia de juntar os dois últimos: armazenamento barato de um lake, com a organização e
-a velocidade de consulta de um warehouse.
+"Um bônus rápido antes de seguir. Data Lakehouse é a ideia de juntar os dois últimos:
+armazenamento barato de um lake, com a organização e a velocidade de consulta de um
+warehouse.
 
 Foi popularizado pela Databricks, por volta de 2020, como resposta direta ao problema
-do pântano de dados que acabamos de falar. Não é o foco de hoje, mas é um nome que
-aparece cada vez mais, vale reconhecer."
+do pântano de dados que acabamos de falar. Guardem esse nome: a história completa por
+trás da Databricks, e do motor que ela comercializa, tem um bloco inteiro reservado
+mais à frente hoje."
 ```
 
 ## Slide 19 · ETL x ELT
@@ -662,10 +664,172 @@ Falta rodar sozinho no horário certo, e avisar alguém quando quebra. C está e
 isso ainda é exatamente o script solto que descrevemos.
 ```
 
-## Slide 36 · Do problema ao pipeline
+## Slide 36 · Processamento distribuído
 
 ```
-⏱ 22h10 às 22h25 (15 min)  |  ESSENCIAL  |  Apresenta: Edmar
+⏱ 22h10 às 22h50 (40 min)  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+Bloco de aprofundamento, por pedido explícito do usuário depois da primeira versão da
+aula: o conceito de processamento distribuído, e a história de Spark e Databricks.
+
+ESTRUTURA:
+  Por que processamento distribuído existe   6 min
+  MapReduce, a ideia que começou tudo          6 min
+  Spark, a mesma ideia na memória                6 min
+  Um exemplo: pandas e Spark lado a lado           6 min
+  Databricks                                         6 min
+  Onde cada peça se encaixa                            5 min
+  Interação                                              4 min
+```
+
+## Slide 37 · PROCESSAMENTO DISTRIBUÍDO
+
+```
+⏱ 6 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Último conceito grande da noite, e um dos mais citados em vaga de dados. Toda conta
+que vocês viram até aqui hoje, e em toda a aula de pandas, rodou numa máquina só: um
+notebook, um banco, um warehouse, processando numa CPU de cada vez.
+
+Em algum volume, uma máquina só não dá mais conta. Não importa quão potente ela seja,
+existe um teto de memória e de processamento.
+
+A solução é dividir o trabalho entre várias máquinas ao mesmo tempo, cada uma
+processando um pedaço, com os resultados se juntando no final. Isso tem nome:
+processamento distribuído."
+```
+
+## Slide 38 · MAPREDUCE, A IDEIA QUE COMEÇOU TUDO
+
+```
+⏱ 6 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"A história começa com um paper. Em 2004, o Google publicou o paper do MapReduce,
+descrevendo como eles processavam a escala gigantesca da própria busca.
+
+A ideia central é separar o trabalho em duas etapas. Map processa cada pedaço dos
+dados em paralelo, em máquinas diferentes. Reduce junta os resultados parciais numa
+resposta só.
+
+O Hadoop nasceu logo depois, como versão open source dessa ideia, criado por Doug
+Cutting e Mike Cafarella. E o Hadoop dominou a década seguinte inteira.
+
+Mas tinha um ponto fraco sério: a cada etapa, ele escrevia o resultado intermediário
+em disco, que é bem mais lento que memória. Isso ia deixando tudo mais devagar."
+```
+
+## Slide 39 · SPARK: A MESMA IDEIA, MAS NA MEMÓRIA
+
+```
+⏱ 6 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Matei Zaharia criou o Spark em 2009, durante o doutorado dele na UC Berkeley, no
+laboratório AMPLab.
+
+A virada foi processar em memória, não em disco. Isso tornou o Spark de dez a cem
+vezes mais rápido que o Hadoop MapReduce, dependendo do tipo de tarefa.
+
+E aqui vai a boa notícia para vocês: o DataFrame do Spark se parece muito com o
+DataFrame do pandas que vocês já sabem usar. Mesma ideia de linhas e colunas, agora
+espalhada por várias máquinas ao mesmo tempo.
+
+Hoje o Spark é o motor de processamento distribuído mais usado do mercado.
+Praticamente todo Data Lake de porte grande tem Spark rodando por trás."
+```
+
+## Slide 40 · PROCESSAMENTO DISTRIBUÍDO
+
+```
+⏱ 6 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Um exemplo rápido, para fixar. Em cima, o mesmo groupby de pandas que vocês já usaram
+hoje. Embaixo, a versão em PySpark, a biblioteca Python que fala com o Spark.
+
+Reparem que a sintaxe é quase igual, de propósito: quem já sabe pandas reconhece a
+maior parte do PySpark de cara.
+
+Por trás, o Spark divide a tabela entre várias máquinas, cada uma agrupa e soma o
+próprio pedaço, e os resultados se juntam no final, sem vocês precisarem escrever
+nenhuma linha a mais para isso acontecer.
+
+E a diferença entre usar um ou outro aparece só no volume. Um milhão de linhas, como o
+banco de vocês da Aula 8, roda bem nos dois. Muitos bilhões de linhas só rodam de
+forma distribuída."
+```
+
+## Slide 41 · DATABRICKS
+
+```
+⏱ 6 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"E fechando a linha do tempo: os criadores do Spark fundaram a Databricks em 2013,
+incluindo o próprio Matei Zaharia.
+
+A empresa pegou um projeto de pesquisa de universidade e transformou em plataforma
+comercial: hospedagem, interface, integração pronta, em vez de cada empresa precisar
+instalar e configurar tudo na mão.
+
+E é a mesma empresa por trás do termo Data Lakehouse, do bônus lá no bloco de
+armazenamento. Agora vocês têm a história completa: Databricks nasceu do Spark, e o
+Lakehouse foi a resposta dela para juntar lake e warehouse numa coisa só.
+
+Hoje é uma das plataformas de dados mais usadas dentro de empresa grande. O que
+começou como projeto de doutorado virou parte do dia a dia do mercado."
+```
+
+## Slide 42 · ONDE CADA PEÇA SE ENCAIXA
+
+```
+⏱ 5 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Um resumo, juntando as cinco ferramentas que ganharam nome próprio hoje.
+
+Hadoop processa de forma distribuída, em disco, foi o pioneiro. Spark faz a mesma
+coisa em memória, e é o padrão de hoje. Databricks é a plataforma comercial construída
+em cima do Spark. Airflow orquestra quando cada etapa roda. E dbt transforma dado com
+SQL versionado.
+
+Reparem que nenhuma delas faz o trabalho da outra. Cada uma resolve uma parte
+diferente do mesmo pipeline, e é exatamente por isso que aparecem juntas com tanta
+frequência numa vaga de emprego da área."
+```
+
+## Slide 43 · INTERAÇÃO
+
+```
+⏱ 4 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Última pergunta antes do fechamento. Uma tabela de 50 mil linhas, que já processa em
+segundos no pandas de um notebook comum. Faz sentido migrar para Spark?"
+
+[aguarde 30 segundos]
+
+Resposta: B. Distribuir tem custo de coordenação entre as máquinas, e esse custo só
+compensa quando o volume realmente exige. Para 50 mil linhas, pandas sozinho já é mais
+rápido, porque não perde tempo dividindo e juntando trabalho entre máquinas. C está
+errado, a plataforma não é o que decide isso, o volume é.
+```
+
+## Slide 44 · Do problema ao pipeline
+
+```
+⏱ 22h50 às 23h05 (15 min)  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
@@ -673,7 +837,7 @@ Bloco de fechamento e amarração. Objetivo: mostrar, num desenho só, tudo que 
 hoje cobriu, aplicado ao caso que a turma já conhece de cor.
 ```
 
-## Slide 37 · DO PROBLEMA AO PIPELINE
+## Slide 45 · DO PROBLEMA AO PIPELINE
 
 ```
 ⏱ 10 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -704,10 +868,10 @@ Guardem esta frase: as Aulas 5 a 8 inteiras aconteceram DEPOIS de tudo isso. Hoj
 vocês viram o antes."
 ```
 
-## Slide 38 · Encerramento
+## Slide 46 · Encerramento
 
 ```
-⏱ 22h25 às 22h40 (15 min)  |  ESSENCIAL  |  Apresenta: Edmar
+⏱ 23h05 às 23h20 (15 min)  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
@@ -718,14 +882,14 @@ DISTRIBUIÇÃO:
   Fechamento               2 min
 ```
 
-## Slide 39 · ENCERRAMENTO
+## Slide 47 · ENCERRAMENTO
 
 ```
 ⏱ 4 min  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
-"Cinco ideias para levar de hoje.
+"Seis ideias para levar de hoje.
 
 Engenharia de dados fecha as fases 2 e 4 do pipeline da Aula 1: conseguir os dados, e
 prepará-los.
@@ -739,11 +903,15 @@ madura normalmente usa os três juntos.
 ETL e ELT são a mesma sigla embaralhada, por um motivo histórico real, e a nuvem mudou
 qual ordem costuma valer mais a pena.
 
-E a mais prática: um pipeline de produção se prova pelo que existe em volta do código,
-agendamento, aviso de erro, ordem de dependência, não pelo código em si."
+Um pipeline de produção se prova pelo que existe em volta do código, agendamento,
+aviso de erro, ordem de dependência, não pelo código em si.
+
+E a mais nova de hoje: processamento distribuído só compensa acima de um certo
+volume. Spark existe para o dia em que uma máquina sozinha não aguenta mais, e é isso
+que separa quem sabe o nome da ferramenta de quem sabe quando usar ela."
 ```
 
-## Slide 40 · PRÓXIMOS ENCONTROS
+## Slide 48 · PRÓXIMOS ENCONTROS
 
 ```
 ⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -759,7 +927,7 @@ E na segunda da semana 6, Machine Learning: do baseline ao primeiro modelo. Aí 
 muda de descrever o passado para prever o futuro."
 ```
 
-## Slide 41 · ANTES DE IR
+## Slide 49 · ANTES DE IR
 
 ```
 ⏱ 6 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -784,7 +952,7 @@ PERGUNTAS PREVISÍVEIS DE HOJE:
   Fica mais difícil. Recomendamos revisar o roteiro e o notebook da Aula 7 antes.
 ```
 
-## Slide 42 · Obrigado!
+## Slide 50 · Obrigado!
 
 ```
 ⏱ 2 min  |  ESSENCIAL  |  Apresenta: Edmar
