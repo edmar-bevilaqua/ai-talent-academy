@@ -3,13 +3,14 @@
 Gerador do deck da Aula 9 (Semana 5, segunda-feira) do AI Talent Academy.
 
 Tema: Engenharia de Dados. Aula expositiva, sem mao na massa (a pratica fica para a
-Aula 10, na quinta). Escopo rico de proposito, por pedido explicito do usuario: cobre
-fontes de dados, batch x streaming, banco transacional x Data Warehouse x Data Lake
-(com nota sobre Lakehouse), ETL x ELT com a rivalidade historica Inmon x Kimball,
-qualidade de dados, pipeline de producao e DAG, a historia do Airflow e do dbt, e um
-fechamento ponta a ponta usando o mesmo caso de fraude em cartao das Aulas 2, 5, 6, 7
-e 8. O usuario pediu para gerar tudo rico e cortar depois, entao a aula ficou mais
-longa que o padrao de 3h: ver o total real no final da geracao.
+Aula 10, na quinta). Escopo rico de proposito, por pedido explicito do usuario, em
+duas rodadas: cobre fontes de dados, batch x streaming, banco transacional x Data
+Warehouse x Data Lake (com nota sobre Lakehouse), ETL x ELT com a rivalidade historica
+Inmon x Kimball, qualidade de dados, pipeline de producao e DAG, a historia do Airflow
+e do dbt, processamento distribuido com a historia de MapReduce, Hadoop, Spark e
+Databricks, e um fechamento ponta a ponta usando o mesmo caso de fraude em cartao das
+Aulas 2, 5, 6, 7 e 8. O usuario pediu para gerar tudo rico e cortar depois, entao a
+aula ficou bem mais longa que o padrao de 3h: ver o total real no final da geracao.
 
 Identidade visual: padrao White Cube (Roboto, azul 28347B, fundos e logo do template
 oficial em assets/whitecube/).
@@ -739,7 +740,7 @@ E é o trabalho mais invisível quando dá certo. Ninguém elogia um pipeline qu
 quebrou, só repara quando quebra."
 """)
 
-s = sl_cards("O plano de hoje", "Seis blocos, sempre voltando ao mesmo caso de fraude",
+s = sl_cards("O plano de hoje", "Sete blocos, sempre voltando ao mesmo caso de fraude",
              [("De onde vêm os dados",
                "Fontes comuns, e a diferença entre lote e fluxo.\n\n25 minutos"),
               ("Onde os dados moram",
@@ -750,19 +751,22 @@ s = sl_cards("O plano de hoje", "Seis blocos, sempre voltando ao mesmo caso de f
                "Por que dado sujo é o problema número um.\n\n25 minutos"),
               ("Pipeline de verdade",
                "DAG, Airflow e dbt.\n\n30 minutos"),
+              ("Processamento distribuído",
+               "Spark, Databricks, e o que fazer quando uma máquina não basta.\n\n40 minutos"),
               ("Do problema ao pipeline",
                "O caso de fraude, do início ao fim.\n\n15 minutos")],
              subtitle="Com intervalo no meio. Bastante conteúdo hoje, de propósito.",
-             cols=3, card_h=3.4)
+             cols=4, card_h=3.6)
 notes(s, "6 min", "ESSENCIAL", EU,
       """
-"Seis blocos hoje, mais do que o normal, de propósito: engenharia de dados tem muita
+"Sete blocos hoje, mais do que o normal, de propósito: engenharia de dados tem muita
 coisa boa para conhecer, e preferimos trazer tudo e ajustar depois do que deixar
 faltar.
 
 De onde vêm os dados. Onde eles moram. ETL contra ELT, com uma briga histórica de
-verdade no meio. Qualidade de dados. Pipeline de produção, com Airflow e dbt. E
-fechamos amarrando tudo no caso de fraude em cartão que vocês já conhecem."
+verdade no meio. Qualidade de dados. Pipeline de produção, com Airflow e dbt.
+Processamento distribuído, com Spark e Databricks. E fechamos amarrando tudo no caso
+de fraude em cartão que vocês já conhecem."
 """)
 
 # ==========================================================================
@@ -969,16 +973,17 @@ quem analisa. Cada um faz o trabalho que o outro faz mal."
 s = sl_bullets("Bônus: Data Lakehouse", "Uma ideia recente, juntando os dois últimos",
                [("A ideia central: juntar os dois", "armazenamento barato do lake, com a organização e a velocidade de consulta do warehouse"),
                 ("Popularizado pela Databricks", "por volta de 2020, como resposta ao problema do pântano de dados")],
-               subtitle="Não é o foco de hoje, mas vale saber o nome se aparecer numa entrevista.")
-notes(s, "4 min", "DESCARTÁVEL", EU,
+               subtitle="Guardem o nome Databricks. A história completa por trás dele vem mais à frente hoje.")
+notes(s, "4 min", "ESSENCIAL", EU,
       """
-"Um bônus rápido, para quem quiser o nome mais recente do mercado. Data Lakehouse é a
-ideia de juntar os dois últimos: armazenamento barato de um lake, com a organização e
-a velocidade de consulta de um warehouse.
+"Um bônus rápido antes de seguir. Data Lakehouse é a ideia de juntar os dois últimos:
+armazenamento barato de um lake, com a organização e a velocidade de consulta de um
+warehouse.
 
 Foi popularizado pela Databricks, por volta de 2020, como resposta direta ao problema
-do pântano de dados que acabamos de falar. Não é o foco de hoje, mas é um nome que
-aparece cada vez mais, vale reconhecer."
+do pântano de dados que acabamos de falar. Guardem esse nome: a história completa por
+trás da Databricks, e do motor que ela comercializa, tem um bloco inteiro reservado
+mais à frente hoje."
 """)
 
 # ==========================================================================
@@ -1327,12 +1332,184 @@ isso ainda é exatamente o script solto que descrevemos.
 """)
 
 # ==========================================================================
-# BLOCO G: Do problema ao pipeline (22h10 às 22h25)
+# BLOCO G: Processamento distribuído (22h10 às 22h50)
 # ==========================================================================
-s = sl_section("07", "Do problema ao pipeline",
+s = sl_section("07", "Processamento distribuído",
+               "Spark, Databricks, e o que acontece quando uma máquina não basta",
+               "22h10 às 22h50  ·  40 minutos")
+notes(s, "22h10 às 22h50 (40 min)", "ESSENCIAL", EU,
+      """
+Bloco de aprofundamento, por pedido explícito do usuário depois da primeira versão da
+aula: o conceito de processamento distribuído, e a história de Spark e Databricks.
+
+ESTRUTURA:
+  Por que processamento distribuído existe   6 min
+  MapReduce, a ideia que começou tudo          6 min
+  Spark, a mesma ideia na memória                6 min
+  Um exemplo: pandas e Spark lado a lado           6 min
+  Databricks                                         6 min
+  Onde cada peça se encaixa                            5 min
+  Interação                                              4 min
+""")
+
+s = sl_bullets("Processamento distribuído", "O problema que nenhuma máquina sozinha resolve",
+               [("Toda conta até aqui rodou numa máquina só", "um notebook, um banco, um warehouse, tudo processando numa CPU de cada vez"),
+                ("Em algum volume, uma máquina só não dá mais conta", "existe um teto, não importa quão potente ela seja"),
+                ("A solução: dividir o trabalho entre várias máquinas ao mesmo tempo", "cada uma processa um pedaço, e os resultados se juntam no final"),
+                ("Isso tem nome: processamento distribuído", "o princípio por trás de todo sistema que lida com volume realmente grande")])
+notes(s, "6 min", "ESSENCIAL", EU,
+      """
+"Último conceito grande da noite, e um dos mais citados em vaga de dados. Toda conta
+que vocês viram até aqui hoje, e em toda a aula de pandas, rodou numa máquina só: um
+notebook, um banco, um warehouse, processando numa CPU de cada vez.
+
+Em algum volume, uma máquina só não dá mais conta. Não importa quão potente ela seja,
+existe um teto de memória e de processamento.
+
+A solução é dividir o trabalho entre várias máquinas ao mesmo tempo, cada uma
+processando um pedaço, com os resultados se juntando no final. Isso tem nome:
+processamento distribuído."
+""")
+
+s = sl_bullets("MapReduce, a ideia que começou tudo", "De um paper do Google a um padrão do mercado",
+               [("O Google publicou o paper do MapReduce em 2004", "descrevendo como eles processavam a escala da própria busca"),
+                ("A ideia central: separar em duas etapas", "Map processa cada pedaço em paralelo, Reduce junta os resultados"),
+                ("O Hadoop nasceu logo depois, como versão open source dessa ideia", "criado por Doug Cutting e Mike Cafarella, também em meados dos anos 2000"),
+                ("O Hadoop dominou a década seguinte", "mas tinha um ponto fraco sério: escrevia resultado intermediário em disco o tempo todo")])
+notes(s, "6 min", "ESSENCIAL", EU,
+      """
+"A história começa com um paper. Em 2004, o Google publicou o paper do MapReduce,
+descrevendo como eles processavam a escala gigantesca da própria busca.
+
+A ideia central é separar o trabalho em duas etapas. Map processa cada pedaço dos
+dados em paralelo, em máquinas diferentes. Reduce junta os resultados parciais numa
+resposta só.
+
+O Hadoop nasceu logo depois, como versão open source dessa ideia, criado por Doug
+Cutting e Mike Cafarella. E o Hadoop dominou a década seguinte inteira.
+
+Mas tinha um ponto fraco sério: a cada etapa, ele escrevia o resultado intermediário
+em disco, que é bem mais lento que memória. Isso ia deixando tudo mais devagar."
+""")
+
+s = sl_bullets("Spark: a mesma ideia, mas na memória", "A virada que tornou tudo mais rápido",
+               [("Matei Zaharia criou o Spark em 2009", "durante o doutorado dele na UC Berkeley, no laboratório AMPLab"),
+                ("A virada: processar em memória, não em disco", "isso tornou o Spark de 10 a 100 vezes mais rápido que o Hadoop MapReduce em muitos casos"),
+                ("O DataFrame do Spark se parece muito com o do pandas", "mesma ideia de linhas e colunas, agora espalhada por várias máquinas"),
+                ("Hoje é o motor de processamento distribuído mais usado do mercado", "praticamente todo Data Lake grande tem Spark rodando por trás")])
+notes(s, "6 min", "ESSENCIAL", EU,
+      """
+"Matei Zaharia criou o Spark em 2009, durante o doutorado dele na UC Berkeley, no
+laboratório AMPLab.
+
+A virada foi processar em memória, não em disco. Isso tornou o Spark de dez a cem
+vezes mais rápido que o Hadoop MapReduce, dependendo do tipo de tarefa.
+
+E aqui vai a boa notícia para vocês: o DataFrame do Spark se parece muito com o
+DataFrame do pandas que vocês já sabem usar. Mesma ideia de linhas e colunas, agora
+espalhada por várias máquinas ao mesmo tempo.
+
+Hoje o Spark é o motor de processamento distribuído mais usado do mercado.
+Praticamente todo Data Lake de porte grande tem Spark rodando por trás."
+""")
+
+s = sl_code("Processamento distribuído", "Um exemplo: pandas e Spark lado a lado",
+            ["# pandas, numa máquina só",
+             "transacoes.groupby(\"id_lojista\")[\"valor\"].sum()",
+             "",
+             "# PySpark, em várias máquinas ao mesmo tempo",
+             "transacoes.groupBy(\"id_lojista\").sum(\"valor\")"],
+            [("A sintaxe é quase igual, de propósito", "quem já sabe pandas reconhece a maior parte do PySpark de cara"),
+             ("Por trás, o Spark divide a tabela entre várias máquinas", "cada uma agrupa e soma o próprio pedaço, e os resultados se juntam no final"),
+             ("A diferença aparece só no volume", "1 milhão de linhas roda bem nos dois. Muitos bilhões só rodam de forma distribuída")])
+notes(s, "6 min", "ESSENCIAL", EU,
+      """
+"Um exemplo rápido, para fixar. Em cima, o mesmo groupby de pandas que vocês já usaram
+hoje. Embaixo, a versão em PySpark, a biblioteca Python que fala com o Spark.
+
+Reparem que a sintaxe é quase igual, de propósito: quem já sabe pandas reconhece a
+maior parte do PySpark de cara.
+
+Por trás, o Spark divide a tabela entre várias máquinas, cada uma agrupa e soma o
+próprio pedaço, e os resultados se juntam no final, sem vocês precisarem escrever
+nenhuma linha a mais para isso acontecer.
+
+E a diferença entre usar um ou outro aparece só no volume. Um milhão de linhas, como o
+banco de vocês da Aula 8, roda bem nos dois. Muitos bilhões de linhas só rodam de
+forma distribuída."
+""")
+
+s = sl_bullets("Databricks", "A empresa que transformou o Spark em plataforma",
+               [("Os criadores do Spark fundaram a Databricks em 2013", "incluindo o próprio Matei Zaharia"),
+                ("A empresa transformou um projeto de pesquisa em plataforma comercial", "hospedagem, interface e integração prontas, em vez de instalar e configurar tudo na mão"),
+                ("É a mesma empresa por trás do termo Data Lakehouse", "do bônus lá no bloco de armazenamento, agora com a história completa"),
+                ("Hoje é uma das plataformas de dados mais usadas em empresa grande", "o Spark deixou de ser só um projeto de pesquisa")])
+notes(s, "6 min", "ESSENCIAL", EU,
+      """
+"E fechando a linha do tempo: os criadores do Spark fundaram a Databricks em 2013,
+incluindo o próprio Matei Zaharia.
+
+A empresa pegou um projeto de pesquisa de universidade e transformou em plataforma
+comercial: hospedagem, interface, integração pronta, em vez de cada empresa precisar
+instalar e configurar tudo na mão.
+
+E é a mesma empresa por trás do termo Data Lakehouse, do bônus lá no bloco de
+armazenamento. Agora vocês têm a história completa: Databricks nasceu do Spark, e o
+Lakehouse foi a resposta dela para juntar lake e warehouse numa coisa só.
+
+Hoje é uma das plataformas de dados mais usadas dentro de empresa grande. O que
+começou como projeto de doutorado virou parte do dia a dia do mercado."
+""")
+
+s = sl_table("Onde cada peça se encaixa", "As cinco ferramentas nomeadas hoje, juntas",
+             ["Ferramenta", "Papel", "Origem"],
+             [["Hadoop", "Processamento distribuído em disco, o pioneiro", "2006, baseado no paper do Google"],
+              ["Spark", "Processamento distribuído em memória, o padrão de hoje", "2009, UC Berkeley"],
+              ["Databricks", "Plataforma comercial construída em cima do Spark", "2013, os mesmos criadores"],
+              ["Airflow", "Orquestra quando cada etapa roda", "2014, Airbnb"],
+              ["dbt", "Transforma dado com SQL versionado", "2016, dbt Labs"]],
+             subtitle="Cada uma resolve uma parte diferente do mesmo pipeline.",
+             widths=[0.2, 0.5, 0.3])
+notes(s, "5 min", "ESSENCIAL", EU,
+      """
+"Um resumo, juntando as cinco ferramentas que ganharam nome próprio hoje.
+
+Hadoop processa de forma distribuída, em disco, foi o pioneiro. Spark faz a mesma
+coisa em memória, e é o padrão de hoje. Databricks é a plataforma comercial construída
+em cima do Spark. Airflow orquestra quando cada etapa roda. E dbt transforma dado com
+SQL versionado.
+
+Reparem que nenhuma delas faz o trabalho da outra. Cada uma resolve uma parte
+diferente do mesmo pipeline, e é exatamente por isso que aparecem juntas com tanta
+frequência numa vaga de emprego da área."
+""")
+
+s = sl_interaction("Interação", "Vale a pena distribuir",
+                   "Você tem uma tabela de 50 mil linhas, que já processa em segundos no pandas de um notebook comum. Faz sentido migrar isso para Spark?",
+                   ["A: Sim, Spark é sempre mais rápido, para qualquer volume",
+                    "B: Não, o ganho de processar de forma distribuída só aparece em volume que uma máquina não aguenta",
+                    "C: Só faz diferença se os dados estiverem na Databricks",
+                    "Responda na enquete, 30 segundos"])
+notes(s, "4 min", "ESSENCIAL", EU,
+      """
+"Última pergunta antes do fechamento. Uma tabela de 50 mil linhas, que já processa em
+segundos no pandas de um notebook comum. Faz sentido migrar para Spark?"
+
+[aguarde 30 segundos]
+
+Resposta: B. Distribuir tem custo de coordenação entre as máquinas, e esse custo só
+compensa quando o volume realmente exige. Para 50 mil linhas, pandas sozinho já é mais
+rápido, porque não perde tempo dividindo e juntando trabalho entre máquinas. C está
+errado, a plataforma não é o que decide isso, o volume é.
+""")
+
+# ==========================================================================
+# BLOCO H: Do problema ao pipeline (22h50 às 23h05)
+# ==========================================================================
+s = sl_section("08", "Do problema ao pipeline",
                "O caso de fraude em cartão, do início ao fim",
-               "22h10 às 22h25  ·  15 minutos")
-notes(s, "22h10 às 22h25 (15 min)", "ESSENCIAL", EU,
+               "22h50 às 23h05  ·  15 minutos")
+notes(s, "22h50 às 23h05 (15 min)", "ESSENCIAL", EU,
       """
 Bloco de fechamento e amarração. Objetivo: mostrar, num desenho só, tudo que a aula de
 hoje cobriu, aplicado ao caso que a turma já conhece de cor.
@@ -1374,12 +1551,12 @@ vocês viram o antes."
 """)
 
 # ==========================================================================
-# BLOCO H: Encerramento (22h25 às 22h40)
+# BLOCO I: Encerramento (23h05 às 23h20)
 # ==========================================================================
-s = sl_section("08", "Encerramento",
+s = sl_section("09", "Encerramento",
                "O que vocês levam de hoje e o que vem na semana 6",
-               "22h25 às 22h40  ·  15 minutos")
-notes(s, "22h25 às 22h40 (15 min)", "ESSENCIAL", EU,
+               "23h05 às 23h20  ·  15 minutos")
+notes(s, "23h05 às 23h20 (15 min)", "ESSENCIAL", EU,
       """
 DISTRIBUIÇÃO:
   Recapitulação            4 min
@@ -1388,17 +1565,18 @@ DISTRIBUIÇÃO:
   Fechamento               2 min
 """)
 
-s = sl_bullets("Encerramento", "Cinco ideias para levar de hoje",
+s = sl_bullets("Encerramento", "Seis ideias para levar de hoje",
                [("Engenharia de dados fecha as fases 2 e 4 do pipeline da Aula 1", "conseguir os dados, e prepará-los"),
                 ("Lote é a regra, fluxo é a exceção que custa mais caro", "escolha pelo que a decisão de negócio realmente exige"),
                 ("Banco transacional, warehouse e data lake resolvem problemas diferentes", "uma empresa madura normalmente usa os três juntos"),
                 ("ETL e ELT são a mesma sigla embaralhada, por um motivo histórico real", "a nuvem mudou qual ordem costuma valer mais a pena"),
-                ("Um pipeline de produção se prova pelo que existe em volta do código", "agendamento, aviso de erro, e ordem de dependência entre as tarefas")],
-               subtitle="Se você levar só essas cinco frases, a noite cumpriu o objetivo.",
+                ("Um pipeline de produção se prova pelo que existe em volta do código", "agendamento, aviso de erro, e ordem de dependência entre as tarefas"),
+                ("Processamento distribuído só compensa acima de um certo volume", "Spark existe para o dia em que uma máquina não aguenta mais sozinha")],
+               subtitle="Se você levar só essas seis frases, a noite cumpriu o objetivo.",
                numbered=True)
 notes(s, "4 min", "ESSENCIAL", EU,
       """
-"Cinco ideias para levar de hoje.
+"Seis ideias para levar de hoje.
 
 Engenharia de dados fecha as fases 2 e 4 do pipeline da Aula 1: conseguir os dados, e
 prepará-los.
@@ -1412,8 +1590,12 @@ madura normalmente usa os três juntos.
 ETL e ELT são a mesma sigla embaralhada, por um motivo histórico real, e a nuvem mudou
 qual ordem costuma valer mais a pena.
 
-E a mais prática: um pipeline de produção se prova pelo que existe em volta do código,
-agendamento, aviso de erro, ordem de dependência, não pelo código em si."
+Um pipeline de produção se prova pelo que existe em volta do código, agendamento,
+aviso de erro, ordem de dependência, não pelo código em si.
+
+E a mais nova de hoje: processamento distribuído só compensa acima de um certo
+volume. Spark existe para o dia em que uma máquina sozinha não aguenta mais, e é isso
+que separa quem sabe o nome da ferramenta de quem sabe quando usar ela."
 """)
 
 s = sl_two_col("Próximos encontros", "O que vem pela frente",
