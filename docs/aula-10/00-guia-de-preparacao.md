@@ -12,13 +12,16 @@ executar.
 |---|---|---|
 | **`00-guia-de-preparacao.md`** | Este guia | Edmar |
 | [`dag_fraude_aula10.py`](dag_fraude_aula10.py) | A DAG de demonstração do Airflow, pronta para copiar para a pasta `dags/` | Edmar |
-| [`pyspark_aluno.ipynb`](pyspark_aluno.ipynb) | O notebook da atividade prática, com células de setup prontas e o pipeline com `# TODO` para completar | Alunos |
-| [`pyspark_professor.ipynb`](pyspark_professor.ipynb) | O mesmo notebook, já resolvido, usado para a demonstração ao vivo e como gabarito | Edmar |
+| [`Aula_10_Alunos_Engenharia_de_Dados_com_PySpark.ipynb`](Aula_10_Alunos_Engenharia_de_Dados_com_PySpark.ipynb) | O notebook da atividade prática, com células de setup prontas e o pipeline de seis passos com `# TODO` para completar | Alunos |
+| [`Aula_10_Professor_Engenharia_de_Dados_com_PySpark.ipynb`](Aula_10_Professor_Engenharia_de_Dados_com_PySpark.ipynb) | O mesmo notebook, já resolvido, usado para a demonstração ao vivo e como gabarito | Edmar |
 
-Os dois notebooks compartilham a mesma estrutura de passos (setup, extract,
-transform, unify e load), incluindo a mesma tentativa de junção que dispara o erro
-de coluna ambígua descrito na seção 4.3. No notebook do professor essa célula é
-mantida de propósito, para reproduzir o erro ao vivo antes de mostrar a correção.
+Os dois notebooks compartilham a mesma estrutura de seis passos (extract, transform
+com quarentena, unify, bifurcação por regra de negócio, load em múltiplos destinos e
+reconciliação), incluindo a mesma tentativa de junção que dispara o erro de coluna
+ambígua descrito na seção 4.3. No notebook do professor essa célula é mantida de
+propósito, para reproduzir o erro ao vivo antes de mostrar a correção. O pipeline
+cresceu de quatro para seis passos depois de uma revisão: a versão original deixava
+pouco trabalho real de decisão para o aluno.
 
 ---
 
@@ -240,15 +243,35 @@ A última linha, sozinha, exibe um resumo visual da sessão criada (versão do S
 link da interface de monitoramento). É a confirmação de que deu certo, sem precisar
 de nenhum `print`.
 
-Segunda célula, para conectar ao Drive onde os dados moram, no mesmo padrão já usado
-desde a Aula 4:
+Segunda célula, para baixar os seis CSVs. A versão implementada nos notebooks não
+monta o Drive inteiro (que pede permissão explícita do aluno a cada sessão nova):
+baixa os arquivos individualmente por ID, com `gdown`, direto para o disco local do
+Colab. Menos fricção, e sem tela de autorização no meio da aula:
 
 ```python
-from google.colab import drive
-drive.mount('/content/drive')
+import gdown
+import os
 
-PASTA_DADOS = "/content/drive/MyDrive/AI Talent Academy/Aula 08/dados/csv"
+files = {
+    'cartoes.csv': '13Xf9ILhqxaIcvjq0vENJFCPD-HX-FLjM',
+    'categorias.csv': '1NeAB_U66QnzRHZ1tJesP5lZ0jccXLAke',
+    'clientes.csv': '1zgr0k17FdKp5aRkSd96qtLyJ9x0b4bFv',
+    'contestacoes.csv': '1lSpAe8stD3JEMDJMFbiiYrQH0jYtHzT8',
+    'lojistas.csv': '1vydqkbd2fONvNAfNKon9izr0pqaGBqhy',
+    'transacoes.csv': '1OR3lgLjqVQZoajau2wrSExWPYc8xUsFS'
+}
+
+os.makedirs('csv', exist_ok=True)
+for filename, file_id in files.items():
+    gdown.download(f'https://drive.google.com/uc?id={file_id}', f'csv/{filename}', quiet=True)
+
+PASTA_DADOS = "/content/csv"
 ```
+
+Os IDs acima apontam para arquivos individuais compartilhados como "qualquer pessoa
+com o link pode visualizar" no Drive, não para a pasta inteira da Aula 8. Se os
+arquivos forem movidos ou re-hospedados, os IDs mudam e essa célula precisa ser
+atualizada, tanto aqui quanto nos dois notebooks.
 
 ### 3.2 Teste antes da aula
 
@@ -259,8 +282,9 @@ cronômetro da aula: se levar mais de 2 minutos na sua conexão, ajuste a expect
 que você passa aos alunos.
 
 Teste também com a conta de e-mail que os alunos vão usar (Gmail pessoal, não conta
-corporativa), porque restrição de permissão de Drive corporativo já causou atrito em
-aulas anteriores do programa.
+corporativa). Como o `gdown` baixa por ID público, não por permissão de Drive, esse
+risco específico de conta corporativa deixou de existir para este passo, mas vale
+testar mesmo assim.
 
 ### 3.3 Como explicar aos alunos
 
@@ -273,39 +297,56 @@ algo que o ambiente não entrega de verdade.
 
 ---
 
-## 4. A atividade dos alunos: pipeline de extração, transformação e unificação
+## 4. A atividade dos alunos: pipeline de seis passos
+
+> **Atualização:** a primeira versão deste guia descrevia um pipeline de quatro
+> passos (extract, transform, unify, load). Depois de revisar, ficou claro que isso
+> deixava pouco trabalho real de decisão para o aluno: praticamente só completar
+> chave de `join`. A versão atual, já implementada nos dois notebooks, tem seis
+> passos. Esta seção foi reescrita para acompanhar.
 
 ### 4.1 Dataset e objetivo
 
-Reaproveita a base de fraude em cartão da Aula 8, já com 1 milhão de transações,
-carregada em `PASTA_DADOS` (seção 3.1). O volume é grande o bastante para o
-paralelismo do Spark fazer diferença perceptível, e a base já é familiar à turma.
+Reaproveita a base de fraude em cartão da Aula 8, já com 1 milhão de transações
+(1.000.090 linhas exatas), baixada no notebook via `gdown` a partir de arquivos
+individuais no Drive (célula já pronta, sem precisar montar o Drive inteiro). O
+volume é grande o bastante para o paralelismo do Spark fazer diferença perceptível,
+e a base já é familiar à turma.
 
-Objetivo pedagógico: sair de seis tabelas separadas para **uma tabela única e limpa**,
-aplicando extract, transform e load na prática, com PySpark, sozinhos.
+Objetivo pedagógico: sair de seis tabelas separadas para um pipeline completo, que
+não só transforma, mas também prova que transformou direito: extract, transform com
+quarentena, unify, bifurcação por regra de negócio, load em múltiplos destinos e
+reconciliação final.
 
 ### 4.2 Especificação da atividade, para o aluno
 
 1. **Extract**: ler as seis tabelas (`categorias`, `clientes`, `lojistas`, `cartoes`,
    `transacoes`, `contestacoes`) com `spark.read.csv(..., header=True,
    inferSchema=True)`.
-2. **Transform**: aplicar em `transacoes` os três critérios de qualidade já vistos na
-   Aula 9: remover linhas com valores nulos nos campos obrigatórios, remover
-   `id_transacao` duplicado, e descartar valores não positivos.
-3. **Unify**: unir as seis tabelas numa só, ligando pelas chaves (`id_cartao`,
-   `id_cliente`, `id_lojista`, `id_categoria`), de forma que o resultado final tenha,
-   para cada transação, o nome do cliente, o nome e a categoria do lojista, e a
-   bandeira do cartão.
-4. **Entrega**: gravar o resultado em `/content/base_unificada`, em formato Parquet, e
-   responder duas perguntas de conferência (quantas linhas sobraram depois da
-   limpeza, e qual lojista teve o maior valor total transacionado).
+2. **Transform, com quarentena**: em vez de só descartar linha ruim, marcar cada
+   transação com o motivo do problema (nulo em campo obrigatório, `id_transacao`
+   duplicado, ou valor não positivo), e separar `transacoes_validas` de
+   `transacoes_rejeitadas`. Gravar as rejeitadas num CSV à parte, para auditoria.
+3. **Unify**: unir as seis tabelas, ligando pelas chaves (`id_cartao`, `id_cliente`,
+   `id_lojista`, `id_categoria`), resolvendo a coluna `nome` repetida em três
+   tabelas com `.alias()`.
+4. **Bifurcação por regra de negócio**: separar `trilha_normal` (transações com
+   `status` igual a `aprovada`) de `trilha_atencao` (`recusada` ou `contestada`),
+   enriquecendo a segunda com o detalhe de `contestacoes` via `LEFT JOIN`.
+5. **Load, em múltiplos destinos**: gravar a trilha normal em Parquet particionado
+   por `estado`, a trilha de atenção num CSV único, e um resumo agregado por
+   lojista, também em CSV único.
+6. **Reconciliação**: provar, com `assert`, que a soma de válidas e rejeitadas bate
+   com o total extraído, e que a soma das duas trilhas bate com a base unificada.
+7. **Entrega**: responder as perguntas de conferência do notebook (quantas
+   transações ficaram em quarentena, quantas foram para a trilha de atenção, e qual
+   lojista teve o maior valor total na trilha normal).
 
 ### 4.3 A pegadinha didática real
 
 Ao tentar o passo 3, o aluno vai bater numa mensagem de erro genuína, não simulada:
 `clientes`, `lojistas` e `categorias` têm todas uma coluna chamada `nome`, com
-significados diferentes em cada uma. `clientes` e `lojistas` também compartilham
-`cidade`, `estado` e `data_cadastro`. Depois do `join`, o Spark reclama de referência
+significados diferentes em cada uma. Depois do `join`, o Spark reclama de referência
 ambígua se alguém tentar usar `nome` sem dizer de qual tabela.
 
 Isso funciona como gancho de ensino: a mensagem conecta direto com o critério de
@@ -314,71 +355,41 @@ Isso funciona como gancho de ensino: a mensagem conecta direto com o critério d
 saída correta é renomear antes de unir, com `.alias()`, e vale a pena deixar o aluno
 esbarrar nisso antes de mostrar a solução.
 
-### 4.4 Gabarito de referência, só para o instrutor
+### 4.4 Por que a quarentena do passo 2 fica vazia, e por que isso está certo
 
-```python
-from pyspark.sql import functions as F
+A base de 1 milhão de transações da Aula 8 já chega limpa nos três critérios
+verificados (zero nulo, zero `id_transacao` duplicado, zero valor não positivo,
+conferido diretamente contra o CSV antes de escrever este guia). Isso significa que
+`transacoes_rejeitadas` vai dar zero linhas na aula.
 
-# Extract
-categorias   = spark.read.csv(f"{PASTA_DADOS}/categorias.csv",   header=True, inferSchema=True)
-clientes     = spark.read.csv(f"{PASTA_DADOS}/clientes.csv",     header=True, inferSchema=True)
-lojistas     = spark.read.csv(f"{PASTA_DADOS}/lojistas.csv",     header=True, inferSchema=True)
-cartoes      = spark.read.csv(f"{PASTA_DADOS}/cartoes.csv",      header=True, inferSchema=True)
-transacoes   = spark.read.csv(f"{PASTA_DADOS}/transacoes.csv",   header=True, inferSchema=True)
-contestacoes = spark.read.csv(f"{PASTA_DADOS}/contestacoes.csv", header=True, inferSchema=True)
+Isso não é um defeito do exercício. É uma oportunidade de dizer em voz alta: a
+quarentena existe para a carga do dia em que a base chegar suja, não só para hoje. O
+pipeline já está pronto para esse dia, sem precisar ser reescrito.
 
-# Transform: os mesmos tres criterios de qualidade da Aula 9
-transacoes_limpo = (
-    transacoes
-    .dropna(subset=["id_transacao", "id_cartao", "id_lojista", "valor"])
-    .dropDuplicates(["id_transacao"])
-    .filter(F.col("valor") > 0)
-)
+### 4.5 Por que a bifurcação do passo 4 usa `status`, e não um padrão inventado
 
-# nome, cidade, estado e data_cadastro existem em mais de uma tabela.
-# Renomear antes de unir evita a referencia ambigua depois do join.
-clientes_r = clientes.select(
-    "id_cliente",
-    F.col("nome").alias("nome_cliente"),
-)
+A coluna `status` de `transacoes` já tem massa real nas três categorias: 938.859
+`aprovada`, 39.836 `recusada` e 21.395 `contestada` (some as duas últimas e bate com
+61.231, a `trilha_atencao`). Não foi necessário inventar um padrão de fraude
+sintético para justificar a bifurcação: o dado real já separa naturalmente.
 
-lojistas_r = lojistas.select(
-    "id_lojista",
-    "id_categoria",
-    F.col("nome").alias("nome_lojista"),
-)
+A integridade referencial da base também foi conferida: toda transação tem cartão,
+lojista e categoria correspondentes, e toda transação com `status` igual a
+`contestada` tem exatamente uma linha correspondente em `contestacoes`. Isso é o que
+garante que o `LEFT JOIN` do passo 4 e os `assert` do passo 6 batem certinho durante
+a aula, sem surpresa de última hora.
 
-categorias_r = categorias.select(
-    "id_categoria",
-    F.col("nome").alias("nome_categoria"),
-)
+### 4.6 Gabarito de referência
 
-# Unify
-base_unificada = (
-    transacoes_limpo
-    .join(cartoes.select("id_cartao", "id_cliente", "bandeira"), on="id_cartao", how="inner")
-    .join(clientes_r, on="id_cliente", how="inner")
-    .join(lojistas_r, on="id_lojista", how="inner")
-    .join(categorias_r, on="id_categoria", how="left")
-)
+O gabarito completo, já resolvido e testado, é o próprio notebook
+[`Aula_10_Professor_Engenharia_de_Dados_com_PySpark.ipynb`](Aula_10_Professor_Engenharia_de_Dados_com_PySpark.ipynb).
+Não duplique o código aqui: se o notebook mudar, este guia ficaria defasado sem
+ninguém perceber. Em caso de dúvida sobre o que o gabarito faz, abra o notebook.
 
-base_unificada.write.mode("overwrite").parquet("/content/base_unificada")
-
-# Perguntas de conferencia
-print("Linhas depois da limpeza:", base_unificada.count())
-(
-    base_unificada.groupBy("nome_lojista")
-    .sum("valor")
-    .orderBy(F.desc("sum(valor)"))
-    .show(5)
-)
-```
-
-Em uma sessão padrão do Colab, esse pipeline completo (leitura, limpeza, quatro
-junções e gravação, sobre 1 milhão de linhas) deve rodar em menos de um minuto. Se
-algum aluno relatar tempo muito maior, o mais provável é um `join` faltando a
-renomeação (gerando produto cartesiano acidental) ou uma tabela lida do caminho
-errado, não um limite real do Colab.
+Em uma sessão padrão do Colab, o pipeline completo (seis passos, sobre 1 milhão de
+linhas) deve rodar em poucos minutos. Se algum aluno relatar tempo muito maior, o
+mais provável é um `join` faltando a renomeação (gerando produto cartesiano
+acidental) ou uma tabela lida do caminho errado, não um limite real do Colab.
 
 ---
 
@@ -395,10 +406,11 @@ errado, não um limite real do Colab.
       pessoal de Gmail
 
 **Na véspera:**
-- [ ] Confirmar que `docs/aula-08/dados/csv/` está numa pasta do Drive acessível para
-      toda a turma (mesma checagem já feita para a Aula 8)
+- [ ] Confirmar que os seis IDs de arquivo do `gdown` (seção 3.1) ainda resolvem,
+      abrindo cada link `https://drive.google.com/uc?id=...` manualmente
 - [ ] Gravar o vídeo de backup da demonstração do Airflow (seção 2.7)
-- [ ] Rodar o gabarito da seção 4.4 do início ao fim, cronometrando
+- [ ] Rodar o `Aula_10_Professor_Engenharia_de_Dados_com_PySpark.ipynb` do início ao
+      fim, num Colab novo, cronometrando
 
 **No dia da aula:**
 - [ ] Abrir o terminal WSL e confirmar os containers de pé com `docker compose ps`
@@ -414,13 +426,15 @@ errado, não um limite real do Colab.
 
 - [ ] Decidir se a atividade da seção 4 vira avaliação com Google Forms (padrão da
       Aula 8) ou entrega livre em notebook, sem nota
-- [ ] Depois de validado este guia, produzir os slides da Aula 10 com
-      `scripts/gerar_slides_aula10.py`, cobrindo a teoria mínima antes da prática
-      (o que é um DAG executando de verdade, o que é uma partição no Spark), sem
-      repetir o que a Aula 9 já ensinou em teoria
-- [x] Notebooks da atividade criados: `pyspark_aluno.ipynb` (com `# TODO`) e
-      `pyspark_professor.ipynb` (gabarito). Falta só rodar os dois de ponta a
-      ponta num Colab real antes da aula, como já pede a seção 3.2
-- [ ] Confirmar a duração real da aula (padrão das quintas é 2h) contra o tempo de
-      demonstração do Airflow (seção 2.5) mais o tempo de prática do PySpark (seção
-      4), e ajustar o corte se necessário
+- [x] Slides da Aula 10 produzidos com `scripts/gerar_slides_aula10.py`: 21 slides,
+      recapitulando a teoria da Aula 9 em minutos, não repetindo, e reservando a
+      maior parte do tempo para a demonstração e a prática. Ver `docs/aula-10/
+      README.md`
+- [x] Notebooks da atividade enriquecidos de quatro para seis passos:
+      `Aula_10_Alunos_Engenharia_de_Dados_com_PySpark.ipynb` (com `# TODO`) e
+      `Aula_10_Professor_Engenharia_de_Dados_com_PySpark.ipynb` (gabarito). Falta
+      só rodar os dois de ponta a ponta num Colab real antes da aula, como já pede
+      a seção 3.2
+- [x] Confirmada a duração: Recepção 10 min, Bloco A 15 min, Bloco B (Airflow) 20
+      min, Bloco C (mecânica PySpark) 15 min, Bloco D (mão na massa) 50 min, Bloco E
+      10 min. Soma 2h certinho, sem corte necessário
