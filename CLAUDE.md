@@ -554,6 +554,11 @@ Problemas reais que já custaram retrabalho. Confira todos ao criar uma aula nov
 ```
 ai-talent-academy/
 ├── CLAUDE.md                      Este arquivo
+├── AGENTS.md                      Documentação dos agentes do repositório
+├── .github/agents/                Agentes para o GitHub Copilot CLI
+│   └── criador-de-aulas.agent.md
+├── .claude/agents/                Agentes para o Claude Code
+│   └── criador-de-aulas.md
 ├── assets/whitecube/              Fundos e logos extraídos do template oficial
 │   ├── image1.png                 capa (cubos)
 │   ├── image3.png                 fundo cinza claro
@@ -668,3 +673,23 @@ Já está prometido nos slides 60 e 61 e no e-mail de pós-aula, com este escopo
 - Ainda sem código. O Google Colab entra a partir da semana 2
 - Os participantes foram convidados a levar um problema real do próprio dia a dia
 - APIs gratuitas da NVIDIA serão a base das aulas práticas com LLM
+
+---
+
+## 13. Agente especializado: criador-de-aulas
+
+O repositório conta com o agente especialista `criador-de-aulas`, configurado em:
+- `.github/agents/criador-de-aulas.agent.md` (GitHub Copilot CLI)
+- `.claude/agents/criador-de-aulas.md` (Claude Code)
+- `AGENTS.md` (documentação geral de agentes)
+
+Ele atua como autor instrucional e engenheiro de apresentações, encarregado de:
+1. Estruturar a ementa da aula conforme a Proposta Executiva e os cronogramas das aulas anteriores.
+2. Escrever o script gerador Python (`scripts/gerar_slides_aulaXX.py`) aplicando a identidade White Cube, a fonte Roboto em 100% dos textos, o piso de 17pt e notas verbatim completas.
+3. Garantir a ausência de travessões (em dash e en dash) e validar as asserções de estilo.
+4. Exportar o roteiro em markdown para `docs/aula-XX/02-roteiro-do-apresentador.md`.
+5. Elaborar os documentos de apoio (`01-plano`, `03-material`, `README` e planos de interação).
+6. Rodar o auditor `scripts/auditar_vicios.py` e eliminar vícios de escrita de IA antes da entrega.
+
+No Copilot CLI, acione com `/agent criador-de-aulas`.
+
