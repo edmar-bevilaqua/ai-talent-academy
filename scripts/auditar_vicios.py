@@ -101,7 +101,14 @@ def auditar(caminho: pathlib.Path):
 
 def main():
     if len(sys.argv) > 1:
-        alvos = [pathlib.Path(a).resolve() for a in sys.argv[1:]]
+        entradas = [pathlib.Path(a).resolve() for a in sys.argv[1:]]
+        alvos = []
+        for entrada in entradas:
+            if entrada.is_dir():
+                alvos.extend(sorted(entrada.glob("*.md")))
+                alvos.extend(sorted(entrada.glob("*.py")))
+            else:
+                alvos.append(entrada)
     else:
         alvos = sorted(ROOT.glob("scripts/gerar_slides_*.py"))
         alvos += sorted(ROOT.glob("docs/aula-*/*.md"))
