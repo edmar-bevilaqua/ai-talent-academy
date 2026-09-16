@@ -98,10 +98,11 @@ quando a resposta vira um número em vez de uma categoria."
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
-"O panorama de hoje, em cinco blocos: como uma máquina aprende de verdade por
+"O panorama de hoje, em seis blocos: como uma máquina aprende de verdade por
 dentro, a matemática por trás da armadilha da acurácia, o primeiro algoritmo de
-verdade, o que muda quando a resposta é um número, e o que acontece quando o modelo
-aprende o preconceito dos dados.
+verdade, um cardápio com os principais modelos que o mercado usa hoje, o que muda
+quando a resposta é um número, e o que acontece quando o modelo aprende o
+preconceito dos dados.
 
 Tudo usando o caso de fraude em cartão que vocês já conhecem desde a Aula 2. Nada de
 exemplo hipotético novo."
@@ -598,7 +599,436 @@ Reparem: isso é a mesma técnica de transformação de coluna que a Aula 7 já 
 em pandas. O que muda agora é só o destino: essa coluna vai alimentar um modelo."
 ```
 
-## Slide 32 · INTERVALO
+## Slide 32 · O cardápio de modelos de hoje
+
+```
+⏱ 21h10 às 22h30 (80 min)  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+DISTRIBUIÇÃO:
+  Por que tantos nomes           2 min
+  Regressão Linear                6 min
+  Regressão Logística             6 min
+  Naive Bayes                     6 min
+  SVM                             6 min
+  Árvore de Decisão, recap        2 min
+  Random Forest                   6 min
+  XGBoost                         6 min
+  Stacking                        5 min
+  Redes Neurais                  19 min
+  Duas tabelas de resumo          6 min
+  De volta ao Bloco 03            9 min
+
+Bloco muito acrescentado a pedido do usuário, para a aula não ficar só em métrica e
+árvore, e depois aprofundado de novo para incluir Redes Neurais. Tempo aproximado,
+não cronometrado com rigor desta vez.
+```
+
+## Slide 33 · ANTES DE COMEÇAR
+
+```
+⏱ 2 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Antes de entrar nos oito nomes: pensem em Machine Learning como uma caixa de
+ferramentas cheia de algoritmos diferentes. Cada modelo que vocês vão ver nasceu
+resolvendo um problema, numa década diferente, às vezes num contexto bem distante
+de dados.
+
+Nenhum vence em tudo. O que muda é o formato do dado, o tamanho da base, e se
+explicar a decisão importa tanto quanto acertar."
+```
+
+## Slide 34 · UMA FERRAMENTA COM HISTÓRIA
+
+```
+⏱ 3 min  |  DESCARTÁVEL, corte primeiro se faltar tempo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Regressão Linear é o modelo mais antigo da lista, e tem uma história com direito
+a briga.
+
+Em 1805, o matemático francês Legendre publica o método dos mínimos quadrados, e dá
+esse nome a ele.
+
+Em 1809, Gauss publica um livro reivindicando ter usado o mesmo método desde 1795,
+antes de Legendre. Os dois brigaram pela prioridade da descoberta.
+
+E em 1886, Francis Galton, estudando a altura de pais e filhos, percebe um padrão
+(filhos de pais muito altos tendem a ser um pouco mais baixos que o pai, filhos de
+pais baixos tendem a ser um pouco mais altos) e batiza esse fenômeno de "regressão".
+É de onde vem o nome que a gente usa até hoje."
+```
+
+## Slide 35 · REGRESSÃO LINEAR, NA PRÁTICA
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Na prática, Regressão Linear é o exemplo mínimo que vocês já viram no Bloco 03, só
+que agora com o nome certo.
+
+No caso de fraude, um uso real seria prever quanto a próxima transação de um
+cliente vai valer, a partir do histórico dele.
+
+Usa quando a relação é aproximadamente uma linha reta. E cuidado com valores
+extremos: um outlier pode puxar a reta inteira para o lado errado."
+```
+
+## Slide 36 · UMA FERRAMENTA COM HISTÓRIA
+
+```
+⏱ 3 min  |  DESCARTÁVEL, corte primeiro se faltar tempo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Regressão Logística usa uma curva que não nasceu para classificação nenhuma. Em
+1838, o matemático belga Pierre François Verhulst desenhou essa curva para
+descrever crescimento populacional, o jeito como uma população cresce rápido no
+início e desacelera quando se aproxima de um limite.
+
+Só no século 20 a estatística pegou essa mesma curva emprestada para outro
+problema: transformar qualquer número numa probabilidade entre 0 e 1. E o nome
+"regressão logística" ficou, mesmo o uso sendo classificação, não regressão."
+```
+
+## Slide 37 · REGRESSÃO LOGÍSTICA, NA PRÁTICA
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Na prática, Regressão Logística parte do mesmo mecanismo da linear, ajuste de
+parâmetro por gradiente descendente, só que o resultado passa por uma curva
+(sigmoide) que vira uma probabilidade entre 0 e 1.
+
+No caso de fraude, em vez de só dizer "fraude" ou "não fraude", ela devolve, por
+exemplo, "82% de chance de ser contestada". Isso é mais útil quando alguém no time
+de risco precisa decidir com que confiança agir."
+```
+
+## Slide 38 · UMA FERRAMENTA COM HISTÓRIA
+
+```
+⏱ 2 min  |  DESCARTÁVEL, corte primeiro se faltar tempo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Naive Bayes carrega o nome de Thomas Bayes, o reverendo e matemático inglês que
+descreveu o teorema que leva o nome dele. Ele nunca publicou esse trabalho em vida:
+morreu em 1761, e foi um amigo, Richard Price, quem organizou e publicou o teorema,
+em 1763."
+```
+
+## Slide 39 · NAIVE BAYES, NA PRÁTICA
+
+```
+⏱ 4 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Naive Bayes calcula a probabilidade de cada classe usando o teorema de Bayes,
+combinando a frequência de cada variável nos dados de treino.
+
+O apelido "ingênuo" vem de uma simplificação: o modelo assume que as variáveis são
+independentes entre si, canal, horário e valor não teriam relação nenhuma uns com
+os outros. Na vida real quase nunca é bem assim, mas o modelo continua funcionando
+surpreendentemente bem, e é muito mais rápido de treinar do que assumir todas as
+relações reais entre variáveis."
+```
+
+## Slide 40 · UMA FERRAMENTA COM HISTÓRIA
+
+```
+⏱ 3 min  |  DESCARTÁVEL, corte primeiro se faltar tempo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"SVM, Máquinas de Vetores de Suporte, tem raiz na Guerra Fria. Vladimir Vapnik
+lançou as primeiras ideias ainda na União Soviética, nos anos 1960, na própria tese
+de doutorado.
+
+Em 1992, já nos Estados Unidos, Boser, Guyon e Vapnik publicam o "kernel trick",
+uma forma de o SVM separar classes que não formam uma linha reta.
+
+E em 1995, Cortes e Vapnik publicam a versão de margem suave, mais tolerante a
+ruído, que é essencialmente a versão que o mercado usa até hoje."
+```
+
+## Slide 41 · SVM, NA PRÁTICA
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Na prática, SVM busca a fronteira com a maior margem possível entre as classes.
+Os pontos mais próximos da fronteira de cada lado se chamam vetores de suporte, e
+são só eles que definem onde a linha fica, o resto dos pontos é irrelevante para a
+conta.
+
+Funciona muito bem em bases pequenas ou médias, com muitas colunas. Para a base de
+fraude de vocês, com 1 milhão de linhas, não seria a primeira escolha: o treino
+fica pesado nessa escala."
+```
+
+## Slide 42 · RECAPITULANDO
+
+```
+⏱ 2 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Árvore de Decisão já teve um bloco inteiro só dela, o Bloco 05. Ela entra no
+cardápio de hoje pelo mesmo motivo dos outros seis: decide por perguntas
+sucessivas, sem gradiente nenhum, e é a base dos dois próximos modelos."
+```
+
+## Slide 43 · UMA FERRAMENTA COM HISTÓRIA
+
+```
+⏱ 3 min  |  DESCARTÁVEL, corte primeiro se faltar tempo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Random Forest tem uma conexão direta com a árvore de decisão que vocês já
+conhecem: o mesmo Leo Breiman que ajudou a formalizar o CART em 1984 publicou, em
+2001, o artigo do Random Forest. Dezessete anos depois, ele próprio resolveu o
+maior problema da própria criação: uma árvore sozinha erra mais do que um monte
+delas votando juntas."
+```
+
+## Slide 44 · RANDOM FOREST, NA PRÁTICA
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Na prática, Random Forest treina várias árvores, cada uma vendo uma amostra
+diferente dos dados, sorteada com reposição. Na hora de decidir, as árvores votam:
+em classificação, vence a categoria mais votada, em regressão, tira a média.
+
+Isso reduz overfitting porque o erro de uma árvore que decorou demais tende a se
+cancelar quando muitas árvores, cada uma com seu próprio exagero, votam juntas. O
+custo é a explicabilidade: seguir o caminho de uma árvore é fácil, seguir o caminho
+de quinhentas e depois somar os votos, nem tanto."
+```
+
+## Slide 45 · UMA FERRAMENTA COM HISTÓRIA
+
+```
+⏱ 3 min  |  DESCARTÁVEL, corte primeiro se faltar tempo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"XGBoost é o mais recente da lista. Tianqi Chen e Carlos Guestrin publicaram o
+artigo em 2016, na conferência KDD, uma das principais da área. Rapidamente virou
+um dos algoritmos mais usados em competição de dados com tabela, tipo Kaggle,
+porque combina bom desempenho com tempo de treino administrável."
+```
+
+## Slide 46 · XGBOOST, NA PRÁTICA
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Na prática, XGBoost treina árvores em sequência, não ao mesmo tempo como o Random
+Forest. Cada árvore nova entra mirando especificamente no erro que sobrou das
+anteriores, usando o gradiente da perda para saber exatamente o que corrigir. Isso
+se chama boosting: cada árvore sozinha é fraca, mas a sequência inteira fica forte."
+```
+
+## Slide 47 · STACKING, NA PRÁTICA
+
+```
+⏱ 5 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Stacking é o mais flexível dos modelos vistos até aqui. Foi proposto por David
+Wolpert em 1992, com o nome "stacked generalization", empilhar generalizações.
+
+A ideia: treinar vários modelos diferentes ao mesmo tempo, por exemplo árvore,
+regressão logística e SVM, todos tentando resolver o mesmo problema. As previsões
+de todos eles viram a entrada de um último modelo, o meta-modelo, que aprende a
+combinar essas previsões da melhor forma possível.
+
+O trade-off é real: ganha desempenho, perde simplicidade, velocidade de treino e
+facilidade de manutenção. Ninguém sobe pra Stacking no primeiro projeto."
+```
+
+## Slide 48 · UMA FERRAMENTA COM HISTÓRIA
+
+```
+⏱ 4 min  |  DESCARTÁVEL, corte primeiro se faltar tempo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Redes Neurais fecham o cardápio, e são as que têm a história mais longa e mais
+acidentada.
+
+Em 1943, McCulloch e Pitts descrevem o primeiro modelo matemático de um neurônio,
+ainda sem nenhuma forma de aprender sozinho.
+
+Em 1958, Rosenblatt cria o Perceptron, o primeiro modelo que ajusta os próprios
+pesos a partir de exemplos. É o nascimento de "aprender com dado" nas redes
+neurais.
+
+Em 1969, Minsky e Papert publicam um livro mostrando matematicamente o limite de um
+Perceptron de uma camada só. A prova estava certa, mas foi lida como "redes neurais
+não funcionam", e o campo praticamente parou por mais de uma década, um episódio
+que ficou conhecido como inverno da IA.
+
+Só em 1986, Rumelhart, Hinton e Williams reintroduzem o backpropagation, o
+algoritmo que permite treinar redes com várias camadas de verdade. É a partir daí
+que o campo se recupera, até chegar no marco de 2012 que vocês já viram na Aula 1:
+o salto do deep learning."
+```
+
+## Slide 49 · O CONCEITO
+
+```
+⏱ 4 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"O conceito de rede neural não é tão distante quanto parece: vocês já construíram
+um neurônio, no Bloco 03, sem saber. Peso vezes entrada, mais um viés, é
+exatamente o "a" e o "b" da regressão linear.
+
+A diferença é uma função de ativação no final, que decide o quanto aquele neurônio
+"dispara". É essa função que permite à rede capturar padrões que não são uma linha
+reta, coisa que a regressão linear sozinha não consegue.
+
+Uma rede neural é um monte desses neurônios, organizados em camadas: uma camada de
+entrada, uma ou mais camadas ocultas, e uma camada de saída. Cada neurônio se
+conecta a todos os da próxima camada, cada conexão com o próprio peso.
+
+E "deep" em deep learning quer dizer só isso: várias camadas ocultas, não uma só."
+```
+
+## Slide 50 · A ARQUITETURA, NO CASO DE FRAUDE
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Um exemplo simplificado, com o caso de fraude. Camada de entrada recebe as
+variáveis da transação, uma por neurônio: valor, horário, país, canal.
+
+Camada oculta combina essas variáveis de formas que ninguém escreveu à mão,
+buscando padrões que separem fraude de não fraude.
+
+Camada de saída devolve um número entre 0 e 1: a probabilidade de fraude, igual à
+Regressão Logística que vocês já viram, só que chegando lá por um caminho bem mais
+longo."
+```
+
+## Slide 51 · COMO APRENDE
+
+```
+⏱ 5 min  |  ESSENCIAL, o coração técnico deste modelo  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+Vá devagar aqui, é o ponto mais denso da parte de redes neurais.
+
+""Como aprende" tem dois passos que já são conhecidos, e um problema novo.
+
+Passo 1, forward pass: os dados atravessam a rede, camada por camada, até uma
+previsão sair do outro lado.
+
+Passo 2, função de perda: compara a previsão com a resposta certa, o mesmo MSE do
+Bloco 03.
+
+O problema novo: uma rede tem milhares de pesos, espalhados em várias camadas.
+Gradiente descendente, sozinho, sabe reduzir a perda, mas não diz automaticamente
+quanto cada peso individual, em cada camada, contribuiu para o erro final.
+
+A solução tem nome, backpropagation: calcula o gradiente de trás para frente, da
+camada de saída até a de entrada, distribuindo a cada peso sua parcela de
+responsabilidade pelo erro. Depois disso, é o gradiente descendente de sempre:
+ajusta cada peso um pouquinho, na direção que reduz a perda, repete milhares de
+vezes."
+```
+
+## Slide 52 · QUANDO USAR, E A PONTE COM A AULA 3
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Quando usar rede neural: quando o padrão é complexo demais para uma reta ou uma
+árvore capturarem, imagem, áudio, texto.
+
+O custo é real: explicar uma decisão fica muito mais difícil. Diferente da árvore
+do Bloco 05, não dá para apontar uma sequência de perguntas que levou à resposta.
+E precisa de muito mais dado, para compensar a quantidade de pesos.
+
+E aqui fecha um ciclo do programa inteiro: um modelo de linguagem, os LLMs da Aula
+3, é uma rede neural gigante, treinada com o mesmo gradiente descendente que vocês
+aprenderam hoje, só que em uma escala muito maior."
+```
+
+## Slide 53 · RESUMO RÁPIDO, MODELOS INDIVIDUAIS
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Cola rápida dos seis modelos individuais que acabamos de ver, para revisar antes
+da prova ou antes de escolher um modelo num projeto de verdade."
+```
+
+## Slide 54 · RESUMO RÁPIDO, ENSEMBLES
+
+```
+⏱ 3 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"E a cola rápida dos três ensembles: Random Forest, XGBoost e Stacking, quando
+juntar modelos rende mais do que treinar um sozinho."
+```
+
+## Slide 55 · DE VOLTA À PERGUNTA DO BLOCO 03
+
+```
+⏱ 9 min  |  ESSENCIAL  |  Apresenta: Edmar
+──────────────────────────────────────────────────────────────
+ROTEIRO DE FALA
+
+"Voltando à pergunta do Bloco 03: quem usa gradiente descendente, quem não usa?
+
+Regressão Linear, Regressão Logística e Redes Neurais usam, ajustando parâmetro
+por parâmetro. Nas redes, o backpropagation é quem calcula a direção certa para
+cada peso, em cada camada, mas o ajuste final continua sendo gradiente descendente.
+
+Árvore de Decisão e Random Forest não usam, decidem por escolha gulosa.
+
+XGBoost é o caso interessante: o próprio nome tem "gradient" dentro. Ele usa
+gradiente, mas de um jeito diferente do que vimos no Bloco 03: o gradiente aponta o
+erro que a próxima árvore da sequência precisa corrigir. A árvore em si, porém,
+continua decidindo por divisão gulosa, não por ajuste contínuo de parâmetro.
+
+SVM e Naive Bayes têm mecanismo próprio, nenhum dos dois se encaixa exatamente nos
+outros grupos. Isso é normal: a área tem décadas, e diferentes problemas inspiraram
+diferentes mecanismos de aprendizado."
+```
+
+## Slide 56 · INTERVALO
 
 ```
 ⏱ 15 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -608,10 +1038,10 @@ ROTEIRO DE FALA
 Intervalo. Sem apresentação.
 ```
 
-## Slide 33 · Quando a resposta é um número
+## Slide 57 · Quando a resposta é um número
 
 ```
-⏱ 21h25 às 21h55 (30 min)  |  ESSENCIAL  |  Apresenta: Edmar
+⏱ 22h45 às 23h15 (30 min)  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
@@ -624,7 +1054,7 @@ Este bloco reaproveita o MSE que acabou de aparecer no Bloco 03: RMSE é a raiz 
 MSE. A Aula 1 nunca cobriu nenhuma métrica de regressão, então o resto é inédito.
 ```
 
-## Slide 34 · TRÊS MÉTRICAS PARA QUANDO A RESPOSTA É UM NÚMERO
+## Slide 58 · TRÊS MÉTRICAS PARA QUANDO A RESPOSTA É UM NÚMERO
 
 ```
 ⏱ 10 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -647,7 +1077,7 @@ R quadrado: de 0 a 1, quanto da variação dos dados o modelo explica. Perto de 
 bom, perto de 0 significa que o modelo não está capturando quase nada."
 ```
 
-## Slide 35 · UMA FERRAMENTA COM HISTÓRIA
+## Slide 59 · UMA FERRAMENTA COM HISTÓRIA
 
 ```
 ⏱ 2 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -659,7 +1089,7 @@ história completa, porque ela é literalmente sobre a métrica que a gente acab
 ver."
 ```
 
-## Slide 36 · O DESAFIO
+## Slide 60 · O DESAFIO
 
 ```
 ⏱ 8 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -677,7 +1107,7 @@ A equipe BellKor's Pragmatic Chaos venceu em 2009, com RMSE de 0,8567, uma melho
 10,06% sobre o Cinematch."
 ```
 
-## Slide 37 · O DETALHE QUE NINGUÉM ESQUECE
+## Slide 61 · O DETALHE QUE NINGUÉM ESQUECE
 
 ```
 ⏱ 5 min  |  ESSENCIAL, o mais memorável do bloco  |  Apresenta: Edmar
@@ -698,7 +1128,7 @@ mais forte, mas por ter cronometrado o envio. Lição real: a métrica decide o
 resultado técnico, mas a regra do jogo decide quem ganha."
 ```
 
-## Slide 38 · POR QUE RMSE FAZIA SENTIDO PARA A NETFLIX
+## Slide 62 · POR QUE RMSE FAZIA SENTIDO PARA A NETFLIX
 
 ```
 ⏱ 5 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -714,10 +1144,10 @@ Isso fecha a ideia do bloco: escolher métrica nunca é neutro. É sempre uma es
 sobre o que você mais quer evitar errar."
 ```
 
-## Slide 39 · Quando o modelo aprende o preconceito dos dados
+## Slide 63 · Quando o modelo aprende o preconceito dos dados
 
 ```
-⏱ 21h55 às 22h15 (20 min)  |  ESSENCIAL  |  Apresenta: Edmar
+⏱ 23h15 às 23h35 (20 min)  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
@@ -726,7 +1156,7 @@ DISTRIBUIÇÃO:
   De onde vem o viés          12 min
 ```
 
-## Slide 40 · RELEITURA
+## Slide 64 · RELEITURA
 
 ```
 ⏱ 8 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -747,7 +1177,7 @@ E o problema real está em outro lugar: ele decidiu errado com muito mais frequ�
 para um grupo específico de pessoas."
 ```
 
-## Slide 41 · DE ONDE VEM O VIÉS
+## Slide 65 · DE ONDE VEM O VIÉS
 
 ```
 ⏱ 12 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -772,10 +1202,10 @@ geral pode estar errando 40% do tempo só para um grupo específico, e a métric
 esconde isso completamente."
 ```
 
-## Slide 42 · Encerramento
+## Slide 66 · Encerramento
 
 ```
-⏱ 22h15 às 22h55 (40 min)  |  ESSENCIAL  |  Apresenta: Edmar
+⏱ 23h35 às 00h15 (40 min)  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
@@ -786,14 +1216,14 @@ DISTRIBUIÇÃO:
   Fechamento                5 min
 ```
 
-## Slide 43 · ENCERRAMENTO
+## Slide 67 · ENCERRAMENTO
 
 ```
 ⏱ 6 min  |  ESSENCIAL  |  Apresenta: Edmar
 ──────────────────────────────────────────────────────────────
 ROTEIRO DE FALA
 
-"Sete ideias para levar de hoje.
+"Nove ideias para levar de hoje.
 
 Aprender é ajustar números até errar menos: função de perda, otimização, gradiente
 descendente.
@@ -801,6 +1231,13 @@ descendente.
 Treino é lento e raro, inferência é rápida e constante.
 
 Nem todo modelo aprende do mesmo jeito: árvore escolhe gulosamente, sem gradiente.
+
+Vocês saem hoje com oito nomes de modelo no vocabulário: regressão linear,
+regressão logística, Naive Bayes, SVM, árvore de decisão, Random Forest, XGBoost,
+Stacking e Redes Neurais.
+
+Uma rede neural é só um monte do exemplo mínimo do Bloco 03 empilhado, com uma
+função de ativação, organizado em camadas, aprendendo por backpropagation.
 
 Acurácia sozinha não basta, e agora vocês sabem a conta: matriz de confusão,
 precisão, recall, F1.
@@ -815,7 +1252,7 @@ Vocês saem hoje sabendo o suficiente para treinar o primeiro modelo de verdade.
 acontece quinta-feira."
 ```
 
-## Slide 44 · PRÓXIMOS ENCONTROS
+## Slide 68 · PRÓXIMOS ENCONTROS
 
 ```
 ⏱ 4 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -831,7 +1268,7 @@ pipeline de engenharia de dados, e agora vão treinar um modelo em cima do mesmo
 Tudo conectado."
 ```
 
-## Slide 45 · ANTES DE IR
+## Slide 69 · ANTES DE IR
 
 ```
 ⏱ 25 min  |  ESSENCIAL  |  Apresenta: Edmar
@@ -861,7 +1298,7 @@ PERGUNTAS PREVISÍVEIS DE HOJE:
   Cai direto, para quem escolher a trilha de Machine Learning na Etapa 2.
 ```
 
-## Slide 46 · Obrigado!
+## Slide 70 · Obrigado!
 
 ```
 ⏱ 5 min  |  ESSENCIAL  |  Apresenta: Edmar

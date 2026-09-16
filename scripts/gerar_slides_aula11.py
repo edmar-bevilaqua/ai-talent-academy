@@ -253,7 +253,7 @@ def sl_cover():
           "Semana 6  ·  Machine Learning", 25, INK, space=0)
     shape(s, ML, Inches(5.75), Inches(2.4), Pt(5), fill=RED)
     block(s, ML, Inches(8.15), Inches(13), Inches(1.0),
-          ["Aula 11  ·  Segunda-feira, 19h00 às 22h55  ·  Online",
+          ["Aula 11  ·  Segunda-feira, 19h00 às 00h15  ·  Online",
            "White Cube  ·  Bevilaqua Data Labs  ·  BPTECH"], S_MIN, INK, space=5)
     footer(s)
     return s
@@ -475,7 +475,7 @@ def sl_break():
           bold=True, space=0)
     block(s, ML, Inches(3.95), Inches(14), Inches(1.7), "15 minutos", 76, WHITE, bold=True,
           space=0, line=1.0)
-    block(s, ML, Inches(5.85), Inches(14), Inches(0.7), "Voltamos às 21h25 em ponto.", 28,
+    block(s, ML, Inches(5.85), Inches(14), Inches(0.7), "Voltamos às 22h45 em ponto.", 28,
           NAVY_TXT_SOFT, space=0)
     shape(s, ML, Inches(7.0), Inches(2.4), Pt(5), fill=RED)
     block(s, ML, Inches(7.5), Inches(15), Inches(1.4),
@@ -589,19 +589,21 @@ teve tempo de fazer: a conta de verdade, um algoritmo de verdade, e as métricas
 quando a resposta vira um número em vez de uma categoria."
 """)
 
-s = sl_bullets("O panorama de hoje", "Cinco coisas novas, em cima do que vocês já sabem",
+s = sl_bullets("O panorama de hoje", "Seis coisas novas, em cima do que vocês já sabem",
                [("Como uma máquina aprende de verdade", "função de perda, otimização, gradiente descendente, treino e inferência"),
                 ("A matemática da armadilha", "matriz de confusão, com números de verdade, não só os nomes"),
                 ("Seu primeiro algoritmo", "árvore de decisão: como ela decide, e por que tem uma história de 1984"),
+                ("O cardápio de modelos de hoje", "regressão linear e logística, Naive Bayes, SVM, Random Forest, XGBoost, Stacking"),
                 ("Quando a resposta é um número", "métricas de regressão, e o caso do Netflix Prize"),
                 ("Quando o modelo aprende o preconceito", "o caso de viés da Aula 1, agora pela lente de um classificador")],
                subtitle="Tudo aplicado ao caso de fraude que vocês já conhecem de cor.")
 notes(s, "5 min", "ESSENCIAL", EU,
       """
-"O panorama de hoje, em cinco blocos: como uma máquina aprende de verdade por
+"O panorama de hoje, em seis blocos: como uma máquina aprende de verdade por
 dentro, a matemática por trás da armadilha da acurácia, o primeiro algoritmo de
-verdade, o que muda quando a resposta é um número, e o que acontece quando o modelo
-aprende o preconceito dos dados.
+verdade, um cardápio com os principais modelos que o mercado usa hoje, o que muda
+quando a resposta é um número, e o que acontece quando o modelo aprende o
+preconceito dos dados.
 
 Tudo usando o caso de fraude em cartão que vocês já conhecem desde a Aula 2. Nada de
 exemplo hipotético novo."
@@ -1118,18 +1120,463 @@ em pandas. O que muda agora é só o destino: essa coluna vai alimentar um model
 """)
 
 # --------------------------------------------------------------------------
-# INTERVALO (21h10 às 21h25)
+# BLOCO 06: O cardápio de modelos de hoje (21h10 às 21h35)
+# --------------------------------------------------------------------------
+s = sl_section("06", "O cardápio de modelos de hoje",
+               "Oito nomes que vocês vão ouvir o resto da carreira, cada um com a própria história",
+               "21h10 às 22h30  ·  80 minutos")
+notes(s, "21h10 às 22h30 (80 min)", "ESSENCIAL", EU,
+      """
+DISTRIBUIÇÃO:
+  Por que tantos nomes           2 min
+  Regressão Linear                6 min
+  Regressão Logística             6 min
+  Naive Bayes                     6 min
+  SVM                             6 min
+  Árvore de Decisão, recap        2 min
+  Random Forest                   6 min
+  XGBoost                         6 min
+  Stacking                        5 min
+  Redes Neurais                  19 min
+  Duas tabelas de resumo          6 min
+  De volta ao Bloco 03            9 min
+
+Bloco muito acrescentado a pedido do usuário, para a aula não ficar só em métrica e
+árvore, e depois aprofundado de novo para incluir Redes Neurais. Tempo aproximado,
+não cronometrado com rigor desta vez.
+""")
+
+s = sl_bullets("Antes de começar", "Pensem em Machine Learning como uma caixa de ferramentas",
+               [("Cada modelo nasceu resolvendo um problema, numa década diferente", "estatística do século 19, guerra fria, crescimento de e-commerce, competição de dados"),
+                ("Nenhum modelo vence em tudo", "o que muda é o formato do dado, o tamanho da base, e se explicar a decisão importa"),
+                ("Oito nomes a seguir, cada um com a própria história", "todos cabem no mesmo cardápio, nenhum é mais avançado que o outro por definição")])
+notes(s, "2 min", "ESSENCIAL", EU,
+      """
+"Antes de entrar nos oito nomes: pensem em Machine Learning como uma caixa de
+ferramentas cheia de algoritmos diferentes. Cada modelo que vocês vão ver nasceu
+resolvendo um problema, numa década diferente, às vezes num contexto bem distante
+de dados.
+
+Nenhum vence em tudo. O que muda é o formato do dado, o tamanho da base, e se
+explicar a decisão importa tanto quanto acertar."
+""")
+
+s = sl_timeline("Uma ferramenta com história", "Regressão Linear: dois séculos de disputa e batismo",
+                [("1805", "Legendre\nPublica o método dos mínimos quadrados, e dá esse nome"),
+                 ("1809", "Gauss\nReivindica ter usado o mesmo método desde 1795, os dois brigam pela prioridade"),
+                 ("1886", "Galton\nEstuda altura de pais e filhos, e batiza o fenômeno de \"regressão\"")])
+notes(s, "3 min", "DESCARTÁVEL, corte primeiro se faltar tempo", EU,
+      """
+"Regressão Linear é o modelo mais antigo da lista, e tem uma história com direito
+a briga.
+
+Em 1805, o matemático francês Legendre publica o método dos mínimos quadrados, e dá
+esse nome a ele.
+
+Em 1809, Gauss publica um livro reivindicando ter usado o mesmo método desde 1795,
+antes de Legendre. Os dois brigaram pela prioridade da descoberta.
+
+E em 1886, Francis Galton, estudando a altura de pais e filhos, percebe um padrão
+(filhos de pais muito altos tendem a ser um pouco mais baixos que o pai, filhos de
+pais baixos tendem a ser um pouco mais altos) e batiza esse fenômeno de "regressão".
+É de onde vem o nome que a gente usa até hoje."
+""")
+
+s = sl_bullets("Regressão Linear, na prática", "O exemplo mínimo do Bloco 03, com nome",
+               [("O mecanismo já é familiar", "ajusta uma reta, ou um plano com mais variáveis, que minimiza o erro, por gradiente descendente"),
+                ("No caso de fraude", "prever quanto uma próxima transação vai valer, a partir do histórico do cliente"),
+                ("Quando usar", "quando a relação entre variável e resposta é aproximadamente uma linha reta"),
+                ("Limitação", "assume linearidade, e é sensível a valores extremos puxando a reta para o lado errado")],
+               subtitle="É o modelo mais simples da lista, e ainda assim um dos mais usados no mercado.")
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Na prática, Regressão Linear é o exemplo mínimo que vocês já viram no Bloco 03, só
+que agora com o nome certo.
+
+No caso de fraude, um uso real seria prever quanto a próxima transação de um
+cliente vai valer, a partir do histórico dele.
+
+Usa quando a relação é aproximadamente uma linha reta. E cuidado com valores
+extremos: um outlier pode puxar a reta inteira para o lado errado."
+""")
+
+s = sl_statement("Uma ferramenta com história",
+                 "Uma curva desenhada em 1838\npara crescimento populacional\nhoje decide se é fraude",
+                 "A curva logística, de Pierre François Verhulst. Repaginada pela estatística no século 20.")
+notes(s, "3 min", "DESCARTÁVEL, corte primeiro se faltar tempo", EU,
+      """
+"Regressão Logística usa uma curva que não nasceu para classificação nenhuma. Em
+1838, o matemático belga Pierre François Verhulst desenhou essa curva para
+descrever crescimento populacional, o jeito como uma população cresce rápido no
+início e desacelera quando se aproxima de um limite.
+
+Só no século 20 a estatística pegou essa mesma curva emprestada para outro
+problema: transformar qualquer número numa probabilidade entre 0 e 1. E o nome
+"regressão logística" ficou, mesmo o uso sendo classificação, não regressão."
+""")
+
+s = sl_bullets("Regressão Logística, na prática", "Regressão no nome, classificação na prática",
+               [("Mesma lógica da linear, com uma curva no final", "o resultado passa pela função sigmoide, e vira um número entre 0 e 1"),
+                ("Esse número é uma probabilidade", "acima de um ponto de corte, geralmente 0,5, a resposta vira \"sim\""),
+                ("No caso de fraude", "a probabilidade de uma transação ser contestada, não só um \"sim\" ou \"não\" seco"),
+                ("Quando usar", "quando a probabilidade importa tanto quanto a categoria final")])
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Na prática, Regressão Logística parte do mesmo mecanismo da linear, ajuste de
+parâmetro por gradiente descendente, só que o resultado passa por uma curva
+(sigmoide) que vira uma probabilidade entre 0 e 1.
+
+No caso de fraude, em vez de só dizer "fraude" ou "não fraude", ela devolve, por
+exemplo, "82% de chance de ser contestada". Isso é mais útil quando alguém no time
+de risco precisa decidir com que confiança agir."
+""")
+
+s = sl_statement("Uma ferramenta com história",
+                 "Um teorema publicado em 1763,\ndois anos depois da morte\nde quem o descobriu",
+                 "Thomas Bayes. Seu amigo Richard Price publicou o trabalho, postumamente.")
+notes(s, "2 min", "DESCARTÁVEL, corte primeiro se faltar tempo", EU,
+      """
+"Naive Bayes carrega o nome de Thomas Bayes, o reverendo e matemático inglês que
+descreveu o teorema que leva o nome dele. Ele nunca publicou esse trabalho em vida:
+morreu em 1761, e foi um amigo, Richard Price, quem organizou e publicou o teorema,
+em 1763."
+""")
+
+s = sl_bullets("Naive Bayes, na prática", "Por que \"ingênuo\"",
+               [("Calcula a probabilidade de cada classe pelo Teorema de Bayes", "usando a frequência de cada variável já vista nos dados de treino"),
+                ("É \"ingênuo\" porque assume que as variáveis são independentes entre si", "na prática quase nunca são, mas o modelo funciona bem mesmo assim"),
+                ("No caso de fraude", "estimar a chance de fraude a partir de canal, horário e faixa de valor, combinados"),
+                ("Quando usar", "classificação de texto, como filtro de spam, poucos dados, e quando velocidade de treino importa")])
+notes(s, "4 min", "ESSENCIAL", EU,
+      """
+"Naive Bayes calcula a probabilidade de cada classe usando o teorema de Bayes,
+combinando a frequência de cada variável nos dados de treino.
+
+O apelido "ingênuo" vem de uma simplificação: o modelo assume que as variáveis são
+independentes entre si, canal, horário e valor não teriam relação nenhuma uns com
+os outros. Na vida real quase nunca é bem assim, mas o modelo continua funcionando
+surpreendentemente bem, e é muito mais rápido de treinar do que assumir todas as
+relações reais entre variáveis."
+""")
+
+s = sl_timeline("Uma ferramenta com história", "SVM: da União Soviética ao mainstream",
+                [("Anos 1960", "Vapnik\nLança as primeiras ideias ainda na União Soviética, na tese de doutorado"),
+                 ("1992", "Kernel trick\nBoser, Guyon e Vapnik ensinam o SVM a separar classes que não formam uma linha reta"),
+                 ("1995", "Margem suave\nCortes e Vapnik publicam a versão que o mercado usa até hoje")])
+notes(s, "3 min", "DESCARTÁVEL, corte primeiro se faltar tempo", EU,
+      """
+"SVM, Máquinas de Vetores de Suporte, tem raiz na Guerra Fria. Vladimir Vapnik
+lançou as primeiras ideias ainda na União Soviética, nos anos 1960, na própria tese
+de doutorado.
+
+Em 1992, já nos Estados Unidos, Boser, Guyon e Vapnik publicam o "kernel trick",
+uma forma de o SVM separar classes que não formam uma linha reta.
+
+E em 1995, Cortes e Vapnik publicam a versão de margem suave, mais tolerante a
+ruído, que é essencialmente a versão que o mercado usa até hoje."
+""")
+
+s = sl_bullets("SVM, na prática", "A fronteira com a maior margem possível",
+               [("Busca a linha, ou plano, que separa as classes", "e escolhe, entre as infinitas linhas possíveis, a que fica mais longe dos pontos mais próximos de cada lado"),
+                ("Esses pontos mais próximos têm nome", "vetores de suporte, são eles que definem a fronteira, o resto dos pontos nem entra na conta"),
+                ("Quando usar", "bases pequenas ou médias, com muitas colunas"),
+                ("Limitação para o caso de fraude", "não é a primeira escolha para 1 milhão de linhas, o treino fica pesado nessa escala")])
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Na prática, SVM busca a fronteira com a maior margem possível entre as classes.
+Os pontos mais próximos da fronteira de cada lado se chamam vetores de suporte, e
+são só eles que definem onde a linha fica, o resto dos pontos é irrelevante para a
+conta.
+
+Funciona muito bem em bases pequenas ou médias, com muitas colunas. Para a base de
+fraude de vocês, com 1 milhão de linhas, não seria a primeira escolha: o treino
+fica pesado nessa escala."
+""")
+
+s = sl_statement("Recapitulando",
+                 "Árvore de Decisão, vocês já viram\nno Bloco 05: decide por perguntas,\nsem gradiente nenhum",
+                 "Perguntas sucessivas, escolha gulosa, auditável. Segue no cardápio.")
+notes(s, "2 min", "ESSENCIAL", EU,
+      """
+"Árvore de Decisão já teve um bloco inteiro só dela, o Bloco 05. Ela entra no
+cardápio de hoje pelo mesmo motivo dos outros seis: decide por perguntas
+sucessivas, sem gradiente nenhum, e é a base dos dois próximos modelos."
+""")
+
+s = sl_statement("Uma ferramenta com história",
+                 "O mesmo Leo Breiman do CART\nvoltou, 17 anos depois,\ncom uma ideia melhor",
+                 "Random Forest, Leo Breiman, 2001. Uma árvore sozinha erra mais que um monte delas.")
+notes(s, "3 min", "DESCARTÁVEL, corte primeiro se faltar tempo", EU,
+      """
+"Random Forest tem uma conexão direta com a árvore de decisão que vocês já
+conhecem: o mesmo Leo Breiman que ajudou a formalizar o CART em 1984 publicou, em
+2001, o artigo do Random Forest. Dezessete anos depois, ele próprio resolveu o
+maior problema da própria criação: uma árvore sozinha erra mais do que um monte
+delas votando juntas."
+""")
+
+s = sl_bullets("Random Forest, na prática", "Muitas árvores, uma votação",
+               [("Treina várias árvores, cada uma com uma amostra diferente dos dados", "sorteada com reposição, então cada árvore vê uma versão levemente diferente da base"),
+                ("Cada árvore vota", "classificação: vence a categoria mais votada. Regressão: tira a média das previsões"),
+                ("Por que isso reduz overfitting", "o erro de uma árvore que decorou demais tende a se cancelar quando muitas árvores votam juntas"),
+                ("Custo", "perde parte da explicabilidade que uma árvore sozinha tinha")])
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Na prática, Random Forest treina várias árvores, cada uma vendo uma amostra
+diferente dos dados, sorteada com reposição. Na hora de decidir, as árvores votam:
+em classificação, vence a categoria mais votada, em regressão, tira a média.
+
+Isso reduz overfitting porque o erro de uma árvore que decorou demais tende a se
+cancelar quando muitas árvores, cada uma com seu próprio exagero, votam juntas. O
+custo é a explicabilidade: seguir o caminho de uma árvore é fácil, seguir o caminho
+de quinhentas e depois somar os votos, nem tanto."
+""")
+
+s = sl_statement("Uma ferramenta com história",
+                 "2016: um algoritmo novo\ncomeça a vencer quase toda\ncompetição de dados em tabela",
+                 "XGBoost, Tianqi Chen e Carlos Guestrin, publicado na conferência KDD.")
+notes(s, "3 min", "DESCARTÁVEL, corte primeiro se faltar tempo", EU,
+      """
+"XGBoost é o mais recente da lista. Tianqi Chen e Carlos Guestrin publicaram o
+artigo em 2016, na conferência KDD, uma das principais da área. Rapidamente virou
+um dos algoritmos mais usados em competição de dados com tabela, tipo Kaggle,
+porque combina bom desempenho com tempo de treino administrável."
+""")
+
+s = sl_bullets("XGBoost, na prática", "Árvores em sequência, corrigindo o erro uma da outra",
+               [("Treina árvores uma de cada vez, não todas juntas", "diferente do Random Forest, aqui a ordem importa"),
+                ("Cada árvore nova mira no erro que sobrou", "o gradiente aponta exatamente o que a próxima árvore precisa corrigir"),
+                ("Isso se chama boosting", "\"impulsionar\": cada árvore é fraca sozinha, juntas ficam fortes"),
+                ("Quando usar", "dados em tabela, hoje um dos algoritmos mais usados em competição de dados")])
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Na prática, XGBoost treina árvores em sequência, não ao mesmo tempo como o Random
+Forest. Cada árvore nova entra mirando especificamente no erro que sobrou das
+anteriores, usando o gradiente da perda para saber exatamente o que corrigir. Isso
+se chama boosting: cada árvore sozinha é fraca, mas a sequência inteira fica forte."
+""")
+
+s = sl_bullets("Stacking, na prática", "O último andar: um modelo que aprende a combinar outros",
+               [("Proposto por David Wolpert em 1992, com o nome \"stacked generalization\"", "a ideia de empilhar modelos, não só somar votos"),
+                ("Treina vários modelos diferentes ao mesmo tempo", "por exemplo árvore, regressão logística e SVM, todos sobre o mesmo problema"),
+                ("As previsões de todos viram entrada de um último modelo", "o meta-modelo, que aprende a combinar essas previsões da melhor forma"),
+                ("Trade-off", "ganha desempenho, perde simplicidade, velocidade de treino e facilidade de manutenção")])
+notes(s, "5 min", "ESSENCIAL", EU,
+      """
+"Stacking é o mais flexível dos modelos vistos até aqui. Foi proposto por David
+Wolpert em 1992, com o nome "stacked generalization", empilhar generalizações.
+
+A ideia: treinar vários modelos diferentes ao mesmo tempo, por exemplo árvore,
+regressão logística e SVM, todos tentando resolver o mesmo problema. As previsões
+de todos eles viram a entrada de um último modelo, o meta-modelo, que aprende a
+combinar essas previsões da melhor forma possível.
+
+O trade-off é real: ganha desempenho, perde simplicidade, velocidade de treino e
+facilidade de manutenção. Ninguém sobe pra Stacking no primeiro projeto."
+""")
+
+s = sl_timeline("Uma ferramenta com história", "Redes Neurais: seis décadas até virar mainstream",
+                [("1943", "McCulloch e Pitts\nDescrevem o primeiro modelo matemático de um neurônio"),
+                 ("1958", "Rosenblatt\nCria o Perceptron, o primeiro modelo neural que aprende sozinho, ajustando os próprios pesos"),
+                 ("1969", "Minsky e Papert\nPublicam um livro mostrando o limite do Perceptron, e o campo esfria por mais de uma década"),
+                 ("1986", "Rumelhart, Hinton e Williams\nReintroduzem o backpropagation, e redes com várias camadas passam a treinar de verdade")])
+notes(s, "4 min", "DESCARTÁVEL, corte primeiro se faltar tempo", EU,
+      """
+"Redes Neurais fecham o cardápio, e são as que têm a história mais longa e mais
+acidentada.
+
+Em 1943, McCulloch e Pitts descrevem o primeiro modelo matemático de um neurônio,
+ainda sem nenhuma forma de aprender sozinho.
+
+Em 1958, Rosenblatt cria o Perceptron, o primeiro modelo que ajusta os próprios
+pesos a partir de exemplos. É o nascimento de "aprender com dado" nas redes
+neurais.
+
+Em 1969, Minsky e Papert publicam um livro mostrando matematicamente o limite de um
+Perceptron de uma camada só. A prova estava certa, mas foi lida como "redes neurais
+não funcionam", e o campo praticamente parou por mais de uma década, um episódio
+que ficou conhecido como inverno da IA.
+
+Só em 1986, Rumelhart, Hinton e Williams reintroduzem o backpropagation, o
+algoritmo que permite treinar redes com várias camadas de verdade. É a partir daí
+que o campo se recupera, até chegar no marco de 2012 que vocês já viram na Aula 1:
+o salto do deep learning."
+""")
+
+s = sl_bullets("O conceito", "Vocês já construíram um neurônio, no Bloco 03",
+               [("Um neurônio artificial é a mesma conta do Bloco 03", "peso vezes entrada, mais um viés, exatamente o \"a\" e o \"b\" da regressão linear"),
+                ("A diferença é uma função de ativação no final", "ela decide o quanto o neurônio \"dispara\", e é o que permite capturar padrões que não são uma linha reta"),
+                ("Uma rede é um monte desses neurônios, organizados em camadas", "camada de entrada, uma ou mais camadas ocultas, camada de saída"),
+                ("Cada neurônio de uma camada se conecta a todos da próxima", "cada conexão tem o próprio peso, e é isso que o treino ajusta")],
+               subtitle="\"Deep\" em deep learning só quer dizer: várias camadas ocultas, não uma só.")
+notes(s, "4 min", "ESSENCIAL", EU,
+      """
+"O conceito de rede neural não é tão distante quanto parece: vocês já construíram
+um neurônio, no Bloco 03, sem saber. Peso vezes entrada, mais um viés, é
+exatamente o "a" e o "b" da regressão linear.
+
+A diferença é uma função de ativação no final, que decide o quanto aquele neurônio
+"dispara". É essa função que permite à rede capturar padrões que não são uma linha
+reta, coisa que a regressão linear sozinha não consegue.
+
+Uma rede neural é um monte desses neurônios, organizados em camadas: uma camada de
+entrada, uma ou mais camadas ocultas, e uma camada de saída. Cada neurônio se
+conecta a todos os da próxima camada, cada conexão com o próprio peso.
+
+E "deep" em deep learning quer dizer só isso: várias camadas ocultas, não uma só."
+""")
+
+s = sl_pipeline("A arquitetura, no caso de fraude", "Três camadas, um exemplo simplificado",
+                [(1, "Camada de entrada", "Recebe as variáveis da transação: valor, horário, país, canal, uma por neurônio."),
+                 (2, "Camada oculta", "Combina essas variáveis de formas que nenhum humano escreveu à mão, buscando padrões."),
+                 (3, "Camada de saída", "Devolve a probabilidade de a transação ser fraude, um número entre 0 e 1.")],
+                per_row=3,
+                subtitle="Uma rede real teria mais neurônios e mais camadas ocultas. Isto é a ideia, em miniatura.")
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Um exemplo simplificado, com o caso de fraude. Camada de entrada recebe as
+variáveis da transação, uma por neurônio: valor, horário, país, canal.
+
+Camada oculta combina essas variáveis de formas que ninguém escreveu à mão,
+buscando padrões que separem fraude de não fraude.
+
+Camada de saída devolve um número entre 0 e 1: a probabilidade de fraude, igual à
+Regressão Logística que vocês já viram, só que chegando lá por um caminho bem mais
+longo."
+""")
+
+s = sl_bullets("Como aprende", "O mesmo gradiente descendente, com um problema novo",
+               [("Passo 1, forward pass", "os dados atravessam a rede, camada por camada, até uma previsão sair do outro lado"),
+                ("Passo 2, função de perda", "compara a previsão com a resposta certa, o mesmo MSE do Bloco 03"),
+                ("O problema novo: milhares de pesos, espalhados em várias camadas", "gradiente descendente sozinho não diz quanto cada peso, de cada camada, contribuiu para o erro"),
+                ("A solução tem nome: backpropagation", "calcula o gradiente de trás para frente, da camada de saída até a de entrada, distribuindo a cada peso sua parcela de responsabilidade pelo erro")],
+               subtitle="Backpropagation é gradiente descendente aplicado a uma rede inteira, camada por camada.")
+notes(s, "5 min", "ESSENCIAL, o coração técnico deste modelo", EU,
+      """
+Vá devagar aqui, é o ponto mais denso da parte de redes neurais.
+
+""Como aprende" tem dois passos que já são conhecidos, e um problema novo.
+
+Passo 1, forward pass: os dados atravessam a rede, camada por camada, até uma
+previsão sair do outro lado.
+
+Passo 2, função de perda: compara a previsão com a resposta certa, o mesmo MSE do
+Bloco 03.
+
+O problema novo: uma rede tem milhares de pesos, espalhados em várias camadas.
+Gradiente descendente, sozinho, sabe reduzir a perda, mas não diz automaticamente
+quanto cada peso individual, em cada camada, contribuiu para o erro final.
+
+A solução tem nome, backpropagation: calcula o gradiente de trás para frente, da
+camada de saída até a de entrada, distribuindo a cada peso sua parcela de
+responsabilidade pelo erro. Depois disso, é o gradiente descendente de sempre:
+ajusta cada peso um pouquinho, na direção que reduz a perda, repete milhares de
+vezes."
+""")
+
+s = sl_bullets("Quando usar, e a ponte com a Aula 3", "Poder, ao custo de explicabilidade",
+               [("Forte quando o padrão é complexo demais para uma reta ou uma árvore", "imagem, áudio, texto, é exatamente aí que \"deep\" em deep learning entra"),
+                ("Custo real: explicar uma decisão fica muito mais difícil", "diferente da árvore do Bloco 05, não dá para apontar uma sequência de perguntas"),
+                ("Precisa de muito mais dado para compensar tantos pesos", "milhares ou milhões de parâmetros para ajustar"),
+                ("É a base dos LLMs da Aula 3", "um modelo de linguagem é uma rede neural gigante, treinada com o mesmo gradiente descendente, só que em escala muito maior")])
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Quando usar rede neural: quando o padrão é complexo demais para uma reta ou uma
+árvore capturarem, imagem, áudio, texto.
+
+O custo é real: explicar uma decisão fica muito mais difícil. Diferente da árvore
+do Bloco 05, não dá para apontar uma sequência de perguntas que levou à resposta.
+E precisa de muito mais dado, para compensar a quantidade de pesos.
+
+E aqui fecha um ciclo do programa inteiro: um modelo de linguagem, os LLMs da Aula
+3, é uma rede neural gigante, treinada com o mesmo gradiente descendente que vocês
+aprenderam hoje, só que em uma escala muito maior."
+""")
+
+s = sl_table("Resumo rápido, modelos individuais", "Seis famílias, seis jeitos de decidir",
+             ["Modelo", "Como decide", "Bom para"],
+             [["Regressão Linear",
+               "Ajusta uma reta que minimiza o erro, por gradiente descendente",
+               "Prever um número, quando a relação é aproximadamente linear"],
+              ["Regressão Logística",
+               "Mesma ideia da linear, mas passa o resultado por uma curva que vira probabilidade",
+               "Classificação, quando a probabilidade importa tanto quanto a categoria"],
+              ["Naive Bayes",
+               "Calcula a probabilidade de cada classe pelo Teorema de Bayes, assumindo variáveis independentes",
+               "Classificação de texto, como filtro de spam, rápido de treinar"],
+              ["SVM, Máquinas de Vetores de Suporte",
+               "Busca a fronteira com a maior margem possível entre as classes",
+               "Bases pequenas ou médias, com muitas colunas"],
+              ["Árvore de Decisão",
+               "Decide por perguntas sucessivas, escolhendo a divisão que separa melhor a cada passo",
+               "Quando explicar a decisão importa tanto quanto acertar"],
+              ["Redes Neurais",
+               "Camadas de neurônios, treinadas por gradiente descendente e backpropagation",
+               "Padrão complexo demais para reta ou árvore: imagem, áudio, texto"]],
+             widths=[0.22, 0.44, 0.34])
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"Cola rápida dos seis modelos individuais que acabamos de ver, para revisar antes
+da prova ou antes de escolher um modelo num projeto de verdade."
+""")
+
+s = sl_table("Resumo rápido, ensembles", "Quando juntar modelos rende mais que um sozinho",
+             ["Modelo", "Como decide", "Bom para"],
+             [["Random Forest",
+               "Várias árvores treinadas com amostras diferentes dos dados, decidindo por votação",
+               "Reduzir o overfitting de uma árvore sozinha, com pouco ajuste fino"],
+              ["XGBoost",
+               "Árvores treinadas em sequência, cada uma corrigindo o erro que as anteriores deixaram passar",
+               "Dados em tabela, um dos algoritmos mais usados em competição de dados"],
+              ["Stacking",
+               "Junta as previsões de modelos diferentes, e um modelo final aprende a combiná-las",
+               "Espremer o último ponto de desempenho, ao custo de mais complexidade"]],
+             widths=[0.22, 0.44, 0.34])
+notes(s, "3 min", "ESSENCIAL", EU,
+      """
+"E a cola rápida dos três ensembles: Random Forest, XGBoost e Stacking, quando
+juntar modelos rende mais do que treinar um sozinho."
+""")
+
+s = sl_bullets("De volta à pergunta do Bloco 03", "Quem usa gradiente descendente, quem não usa",
+               [("Regressão Linear, Regressão Logística e Redes Neurais", "usam gradiente descendente, ajustando parâmetro por parâmetro (as redes, com a ajuda do backpropagation)"),
+                ("Árvore de Decisão e Random Forest", "decidem por escolha gulosa, sem gradiente nenhum"),
+                ("XGBoost usa gradiente de um jeito diferente", "o gradiente aponta o erro que a próxima árvore precisa corrigir, mas cada árvore ainda decide por divisão gulosa"),
+                ("SVM e Naive Bayes têm mecanismo próprio", "SVM busca a margem máxima entre classes, Naive Bayes calcula probabilidade direto, sem ajuste iterativo")],
+               subtitle="Nem toda família aprende do mesmo jeito. Cada uma escolheu um mecanismo diferente de propósito.")
+notes(s, "9 min", "ESSENCIAL", EU,
+      """
+"Voltando à pergunta do Bloco 03: quem usa gradiente descendente, quem não usa?
+
+Regressão Linear, Regressão Logística e Redes Neurais usam, ajustando parâmetro
+por parâmetro. Nas redes, o backpropagation é quem calcula a direção certa para
+cada peso, em cada camada, mas o ajuste final continua sendo gradiente descendente.
+
+Árvore de Decisão e Random Forest não usam, decidem por escolha gulosa.
+
+XGBoost é o caso interessante: o próprio nome tem "gradient" dentro. Ele usa
+gradiente, mas de um jeito diferente do que vimos no Bloco 03: o gradiente aponta o
+erro que a próxima árvore da sequência precisa corrigir. A árvore em si, porém,
+continua decidindo por divisão gulosa, não por ajuste contínuo de parâmetro.
+
+SVM e Naive Bayes têm mecanismo próprio, nenhum dos dois se encaixa exatamente nos
+outros grupos. Isso é normal: a área tem décadas, e diferentes problemas inspiraram
+diferentes mecanismos de aprendizado."
+""")
+
+# --------------------------------------------------------------------------
+# INTERVALO (22h30 às 22h45)
 # --------------------------------------------------------------------------
 s = sl_break()
 notes(s, "15 min", "ESSENCIAL", EU, "Intervalo. Sem apresentação.")
 
 # --------------------------------------------------------------------------
-# BLOCO 06: Quando a resposta é um número (21h25 às 21h55)
+# BLOCO 07: Quando a resposta é um número (22h45 às 23h15)
 # --------------------------------------------------------------------------
-s = sl_section("06", "Quando a resposta é um número",
+s = sl_section("07", "Quando a resposta é um número",
                "Regressão tem métricas próprias, e a Aula 1 não chegou a cobrir isso",
-               "21h25 às 21h55  ·  30 minutos")
-notes(s, "21h25 às 21h55 (30 min)", "ESSENCIAL", EU,
+               "22h45 às 23h15  ·  30 minutos")
+notes(s, "22h45 às 23h15 (30 min)", "ESSENCIAL", EU,
       """
 DISTRIBUIÇÃO:
   MAE, RMSE, R2               10 min
@@ -1231,12 +1678,12 @@ sobre o que você mais quer evitar errar."
 """)
 
 # --------------------------------------------------------------------------
-# BLOCO 07: Quando o modelo aprende o preconceito (21h55 às 22h15)
+# BLOCO 08: Quando o modelo aprende o preconceito (23h15 às 23h35)
 # --------------------------------------------------------------------------
-s = sl_section("07", "Quando o modelo aprende o preconceito dos dados",
+s = sl_section("08", "Quando o modelo aprende o preconceito dos dados",
                "O caso de viés da Aula 1, pela lente de hoje",
-               "21h55 às 22h15  ·  20 minutos")
-notes(s, "21h55 às 22h15 (20 min)", "ESSENCIAL", EU,
+               "23h15 às 23h35  ·  20 minutos")
+notes(s, "23h15 às 23h35 (20 min)", "ESSENCIAL", EU,
       """
 DISTRIBUIÇÃO:
   Releitura do caso de viés    8 min
@@ -1289,12 +1736,12 @@ esconde isso completamente."
 """)
 
 # --------------------------------------------------------------------------
-# BLOCO 08: Encerramento (22h15 às 22h55)
+# BLOCO 09: Encerramento (23h35 às 00h15)
 # --------------------------------------------------------------------------
-s = sl_section("08", "Encerramento",
+s = sl_section("09", "Encerramento",
                "O que vocês levam de hoje e o que vem na quinta",
-               "22h15 às 22h55  ·  40 minutos")
-notes(s, "22h15 às 22h55 (40 min)", "ESSENCIAL", EU,
+               "23h35 às 00h15  ·  40 minutos")
+notes(s, "23h35 às 00h15 (40 min)", "ESSENCIAL", EU,
       """
 DISTRIBUIÇÃO:
   Recapitulação             6 min
@@ -1303,19 +1750,21 @@ DISTRIBUIÇÃO:
   Fechamento                5 min
 """)
 
-s = sl_bullets("Encerramento", "Sete ideias para levar de hoje",
+s = sl_bullets("Encerramento", "Nove ideias para levar de hoje",
                [("Aprender é ajustar números até errar menos", "função de perda, otimização e gradiente descendente, o motor por trás da maioria dos modelos"),
                 ("Treino é lento e raro, inferência é rápida e constante", "todo modelo em produção vive fazendo inferência, o treino já ficou para trás"),
                 ("Nem todo modelo aprende do mesmo jeito", "árvore de decisão escolhe gulosamente, sem gradiente nenhum, diferente de regressão e redes neurais"),
+                ("Agora vocês têm oito nomes de modelo no vocabulário", "regressão linear e logística, Naive Bayes, SVM, árvore, Random Forest, XGBoost, Stacking e Redes Neurais"),
+                ("Uma rede neural é só um monte de \"a vezes x mais b\" empilhados", "com uma função de ativação, organizados em camadas, aprendendo por backpropagation"),
                 ("Acurácia sozinha não basta, e agora vocês sabem a conta", "matriz de confusão, precisão, recall e F1, com números de verdade"),
                 ("Regressão tem métricas próprias", "MAE, RMSE e R quadrado, cada uma penalizando o erro de um jeito diferente"),
                 ("Escolher métrica é escolher prioridade de negócio", "o Netflix Prize escolheu RMSE porque queria evitar recomendação péssima, não erro pequeno"),
                 ("Viés de modelo é viés de dado", "corrigir o algoritmo sem auditar o dado que o treinou não resolve o problema")],
-               subtitle="Se você levar só essas sete frases, a noite cumpriu o objetivo.",
+               subtitle="Se você levar só essas nove frases, a noite cumpriu o objetivo.",
                numbered=True)
 notes(s, "6 min", "ESSENCIAL", EU,
       """
-"Sete ideias para levar de hoje.
+"Nove ideias para levar de hoje.
 
 Aprender é ajustar números até errar menos: função de perda, otimização, gradiente
 descendente.
@@ -1323,6 +1772,13 @@ descendente.
 Treino é lento e raro, inferência é rápida e constante.
 
 Nem todo modelo aprende do mesmo jeito: árvore escolhe gulosamente, sem gradiente.
+
+Vocês saem hoje com oito nomes de modelo no vocabulário: regressão linear,
+regressão logística, Naive Bayes, SVM, árvore de decisão, Random Forest, XGBoost,
+Stacking e Redes Neurais.
+
+Uma rede neural é só um monte do exemplo mínimo do Bloco 03 empilhado, com uma
+função de ativação, organizado em camadas, aprendendo por backpropagation.
 
 Acurácia sozinha não basta, e agora vocês sabem a conta: matriz de confusão,
 precisão, recall, F1.
