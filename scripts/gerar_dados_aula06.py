@@ -236,29 +236,39 @@ N_CARTOES_TESTE = 15
 N_TRANSACOES_POR_TESTE = 6
 
 
-def injetar_anomalias(transacoes, lojistas):
+def injetar_anomalias(transacoes, lojistas,
+                       n_lojistas_suspeitos=N_LOJISTAS_SUSPEITOS,
+                       taxa_contestacao_suspeita=TAXA_CONTESTACAO_SUSPEITA,
+                       fracao_horario_suspeito=FRACAO_HORARIO_SUSPEITO,
+                       n_cartoes_teste=N_CARTOES_TESTE,
+                       n_transacoes_por_teste=N_TRANSACOES_POR_TESTE):
     """Planta um padrão de fraude descobrível via análise exploratória, em três
     camadas: (1) um punhado de lojistas com taxa de contestação bem acima da
     média, (2) concentração anômala de horário de madrugada nas transações
     desses lojistas, (3) teste de cartão: rajadas de transações pequenas e
     quase idênticas, em minutos, no mesmo lojista suspeito.
+
+    Os cinco parâmetros têm o valor histórico da Aula 8 como padrão (não muda
+    nada para quem já usa o script sem passar nada). Uma chamada com valores
+    maiores, como a da Aula 12, dá um sinal mais forte e mais fácil de um
+    primeiro modelo aprender: ver `--taxa-contestacao-suspeita` em `main()`.
     """
     cidade_por_lojista = {l[0]: l[3] for l in lojistas}
     ids_lojista = list(cidade_por_lojista.keys())
-    lojistas_suspeitos = random.sample(ids_lojista, N_LOJISTAS_SUSPEITOS)
+    lojistas_suspeitos = random.sample(ids_lojista, n_lojistas_suspeitos)
     suspeitos = frozenset(lojistas_suspeitos)
 
     indices_suspeitos = [i for i, t in enumerate(transacoes) if t[2] in suspeitos]
 
     # Camada 1: taxa de contestação bem acima da média geral (~2%).
-    n_contestar = int(len(indices_suspeitos) * TAXA_CONTESTACAO_SUSPEITA)
+    n_contestar = int(len(indices_suspeitos) * taxa_contestacao_suspeita)
     for idx in random.sample(indices_suspeitos, n_contestar):
         t = list(transacoes[idx])
         t[6] = "contestada"
         transacoes[idx] = tuple(t)
 
     # Camada 2: concentração de horário na madrugada, fora do padrão da base.
-    n_horario = int(len(indices_suspeitos) * FRACAO_HORARIO_SUSPEITO)
+    n_horario = int(len(indices_suspeitos) * fracao_horario_suspeito)
     for idx in random.sample(indices_suspeitos, n_horario):
         t = list(transacoes[idx])
         nova_hora = t[4].replace(
@@ -270,20 +280,20 @@ def injetar_anomalias(transacoes, lojistas):
     # Camada 3: teste de cartão. Antes de golpes maiores, é comum o fraudador
     # rodar várias transações pequenas e parecidas, em sequência rápida, só para
     # confirmar que o cartão ainda funciona. Aqui, alguns cartões que já
-    # passaram pelo lojista suspeito ganham uma rajada de 6 transações de R$1 a
+    # passaram pelo lojista suspeito ganham uma rajada de transações de R$1 a
     # R$5, dentro de uma janela de 10 minutos, no mesmo lojista.
     novas = []
     proximo_id = transacoes[-1][0] + 1
     ids_cartao_suspeitos = list({transacoes[i][1] for i in indices_suspeitos})
     amostra_cartoes = random.sample(
-        ids_cartao_suspeitos, min(N_CARTOES_TESTE, len(ids_cartao_suspeitos)))
+        ids_cartao_suspeitos, min(n_cartoes_teste, len(ids_cartao_suspeitos)))
     for id_cartao in amostra_cartoes:
         id_lojista_teste = random.choice(lojistas_suspeitos)
         inicio_rajada = random.choice([
             transacoes[i][4] for i in indices_suspeitos
             if transacoes[i][1] == id_cartao
         ])
-        for _ in range(N_TRANSACOES_POR_TESTE):
+        for _ in range(n_transacoes_por_teste):
             valor_teste = round(random.uniform(1.0, 5.0), 2)
             hora_teste = inicio_rajada + timedelta(minutes=random.randint(0, 10))
             novas.append((proximo_id, id_cartao, id_lojista_teste, valor_teste,
@@ -551,6 +561,20 @@ def main():
                      help="planta a história de fraude descobrível (ver "
                           "docs/aula-08/dados/historia_anomalia.md). Desligado por "
                           "padrão, para não afetar o pacote já calibrado da Aula 6.")
+    ap.add_argument("--n-lojistas-suspeitos", type=int, default=N_LOJISTAS_SUSPEITOS,
+                     help=f"usado só com --anomalias. Padrão: {N_LOJISTAS_SUSPEITOS} "
+                          "(o valor histórico da Aula 8)")
+    ap.add_argument("--taxa-contestacao-suspeita", type=float,
+                     default=TAXA_CONTESTACAO_SUSPEITA,
+                     help=f"usado só com --anomalias. Padrão: {TAXA_CONTESTACAO_SUSPEITA}")
+    ap.add_argument("--fracao-horario-suspeito", type=float,
+                     default=FRACAO_HORARIO_SUSPEITO,
+                     help=f"usado só com --anomalias. Padrão: {FRACAO_HORARIO_SUSPEITO}")
+    ap.add_argument("--n-cartoes-teste", type=int, default=N_CARTOES_TESTE,
+                     help=f"usado só com --anomalias. Padrão: {N_CARTOES_TESTE}")
+    ap.add_argument("--n-transacoes-por-teste", type=int,
+                     default=N_TRANSACOES_POR_TESTE,
+                     help=f"usado só com --anomalias. Padrão: {N_TRANSACOES_POR_TESTE}")
     args = ap.parse_args()
 
     global OUT, CSV_DIR
@@ -583,7 +607,12 @@ def main():
     n_transacoes_teste = 0
     if args.anomalias:
         transacoes, lojistas_suspeitos, n_transacoes_teste = injetar_anomalias(
-            transacoes, lojistas)
+            transacoes, lojistas,
+            n_lojistas_suspeitos=args.n_lojistas_suspeitos,
+            taxa_contestacao_suspeita=args.taxa_contestacao_suspeita,
+            fracao_horario_suspeito=args.fracao_horario_suspeito,
+            n_cartoes_teste=args.n_cartoes_teste,
+            n_transacoes_por_teste=args.n_transacoes_por_teste)
         # As transações plantadas foram só anexadas ao final da lista. Sem
         # embaralhar, elas ficam agrupadas nas últimas linhas do CSV, e um
         # .tail() ingênuo entrega a resposta da investigação de graça. Embaralha
